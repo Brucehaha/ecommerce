@@ -61,9 +61,16 @@ def register(request):
 	context = {
 		"form": form
 	}
+
 	if form.is_valid():
 		print(form.cleaned_data)
-	return render(request, "auth/register.html", context)
+		username = form.cleaned_data.get("username")
+		email = form.cleaned_data.get("email")
+		password = form.cleaned_data.get("password")
+
+		new_user = User.objects.create_user(username, email, password)
+		print(new_user)
+	return render(request, "auth/register.html", context)    
 
 
 def home_page_old(request):
