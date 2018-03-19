@@ -20,6 +20,8 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
+from products.views import ProductListView, product_list_view, ProductDetailView, product_detail_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_page),
@@ -27,6 +29,10 @@ urlpatterns = [
     path('contact/', views.contact_page),
     path('login/', views.login),
     path('register/', views.register),
+    path('products/', ProductListView.as_view()),
+    path('products-fba/',  product_list_view),
+    path('products/<int:pk>/', ProductDetailView.as_view()),
+    path('products-fba/<int:pk>/',  product_detail_view),
 
  ]
 
