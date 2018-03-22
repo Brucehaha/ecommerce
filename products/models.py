@@ -2,12 +2,16 @@ import random
 import os
 from datetime import date
 from django.db import models
+from django.db.models.signals import pre_save, post_save
+from.utils import unique_slug_generator
+
 
 # Create your models here.
 def get_filename_ext(filename):
 	base_name = os.path.basename(filename)
 	name, ext = os.path.splitext(base_name)
 	return name, ext
+
 
 def upload_image_path(instance, filename):
 	print(instance)
@@ -41,7 +45,7 @@ class ProductManager(models.Manager):
 		return self.get_queryset().active()
 
 	def features(self):#for Product.objects.featured
-		return self.get_queryset().filter(featured=True)
+		return self.get_queryset() .filter(featured=True)
 
 	def get_by_id(self, id):
 		qs = self.get_queryset().filter(id=id)
@@ -51,6 +55,7 @@ class ProductManager(models.Manager):
 
 class Product(models.Model):
 	title 		= models.CharField(max_length=120)
+	slug		=models.SlugField(blank=True, unique=True)
 	description = models.TextField()
 	price		= models.DecimalField(decimal_places=2,
 	 								  max_digits=20,
@@ -70,3 +75,10 @@ class Product(models.Model):
 		
 	def __unicode__(self):
 		return self.title
+
+
+def product_pre_save_receiver(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = unique_slug_generator(instance)
+
+pre_save.connect(product_pre_save_receiver, sender=Product)

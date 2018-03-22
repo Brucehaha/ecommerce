@@ -39,7 +39,8 @@ urlpatterns = [
     path('featured/<int:pk>', ProductFeaturedDetailView.as_view()),
     path('products/', ProductListView.as_view()),
     path('products-fbv/',  product_list_view),
-    path('products/<int:pk>/', ProductDetailView.as_view()),
+    #path('products/<int:pk>/', ProductDetailView.as_view()),
+    path('products/<slug:slug>/', ProductDetailView.as_view()),
     path('products-fbv/<int:pk>/',  product_detail_view),
 
  ]

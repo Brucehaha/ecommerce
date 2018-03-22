@@ -44,19 +44,18 @@ def product_list_view(request):
 
 
 class ProductDetailView(DetailView):
+	queryset  = Product.objects.all()
 	templates = "products/product_detail.html"
 
-	def get_context_data(self, *args, **kwargs):
-		context = super().get_context_data(*args, **kwargs)
-		# print(context)
-		context['abc'] = 123
-		return context
+	# def get_context_data(self, *args, **kwargs):
+	# 	context = super().get_context_data(*args, **kwargs)
+	# 	# print(context)
+	# 	context['abc'] = 123
+	# 	return context
 	def get_object(self, *args, **kwargs):
 		request =self.request
-		pk = self.kwargs.get('pk') #dictionary function get value of the pk
-		instance = Product.objects.get_by_id(pk)
-		if instance is None:
-			raise Http404("Product dosen't exist")
+		slug = self.kwargs.get('slug')
+		instance = get_object_or_404(Product, slug=slug, active=True)
 		return instance
 
 
