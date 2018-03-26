@@ -24,7 +24,7 @@ def about_page(request):
 def contact_page(request):
 	contact_form = ContactForm(request.POST or None)
 	context={	
-		"title": "Contact",
+		"title": "C ontact",
 		"content": "Welcome to the home page",
 		"form": contact_form,
 	}
@@ -50,7 +50,7 @@ def login(request):
 			auth_login(request, user)
 			print(request.user.is_authenticated)
 
-			return redirect("/login") 
+			return redirect("/") 
 		else:
 			print("Error")
 
