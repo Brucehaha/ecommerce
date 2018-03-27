@@ -27,7 +27,7 @@ class ProductFeaturedDetailView(DetailView):
 
 class ProductListView(ListView):
 	templates = "products/product_list.html"
-
+	paginate_by = 2
 	def get_queryset(self, *args, **kwargs):
 		request = self.request
 		return Product.objects.all()
