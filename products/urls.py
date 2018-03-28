@@ -7,7 +7,7 @@ from products.views import (ProductListView,
                             ProductFeaturedDetailView,
                             )
 
-app_name="myproject"
+app_name="products"
 urlpatterns = [
     path('<slug:slug>/', ProductDetailView.as_view(), name="detail"),
     path('', ProductListView.as_view(), name="list"),

@@ -36,6 +36,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('register/', views.register),
     path('products/', include('products.urls', namespace='products')),
+    path('search/', include('search.urls', namespace='search')),
     # path('products-fbv/',  product_list_view),
     # #path('products/<int:pk>/', ProductDetailView.as_view()),
     # path('products/<slug:slug>/', ProductDetailView.as_view()),

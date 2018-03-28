@@ -44,7 +44,7 @@ class ProductManager(models.Manager):
 	def all(self):
 		return self.get_queryset().active()
 
-	def features(self):#for Product.objects.featured
+	def featured(self):#for Product.objects.featured
 		return self.get_queryset() .filter(featured=True)
 
 	def get_by_id(self, id):
