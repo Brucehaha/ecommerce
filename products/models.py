@@ -1,3 +1,4 @@
+from django.db.models import Q
 import random
 import os
 from datetime import date
@@ -36,6 +37,10 @@ class ProductQuerySet(models.query.QuerySet):
 	def active(self):
 		return self.filter(active=True)
 
+	def search(self, query):
+		lookups = Q(title__icontains=query) | Q(description__icontains=query)
+		return self.filter(lookups).distinct()
+
 
 class ProductManager(models.Manager):
 	def get_queryset(self):
@@ -52,6 +57,13 @@ class ProductManager(models.Manager):
 		if qs.count() == 1:
 			return qs.first()
 		return None
+
+	def search(self, query):
+		# lookups = Q(title__icontains=query) | Q(description__icontains=query)
+		return self.get_queryset().active().search(query)#defined in last model
+ 
+
+
 
 class Product(models.Model):
 	title 		= models.CharField(max_length=120)
