@@ -34,6 +34,7 @@ urlpatterns = [
     path('about/', views.about_page, name='about'),
     path('contact/', views.contact_page, name='contact'),
     path('login/', views.login, name='login'),
+    path('carts/', include('carts.urls', namespace='carts')),
     path('register/', views.register),
     path('products/', include('products.urls', namespace='products')),
     path('search/', include('search.urls', namespace='search')),
