@@ -2,4 +2,34 @@
 
 {% block content %}
 <h1>Cart</h1>
-{% endblock %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Product</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for product in carts.products.all %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ product.title }} {% include "products/snippets/cart_update_form.html" with product=product carts=carts in_cart=True %}
+</td>
+      <td>{{ product.price}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td colspan="2">Subtotal: {{ carts.subtotal }}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td colspan="2">Total: {{ carts.total }}</td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %} 

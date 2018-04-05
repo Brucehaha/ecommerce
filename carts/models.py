@@ -10,6 +10,8 @@ User = settings.AUTH_USER_MODEL
 class CartManager(models.Manager):
 	def new_or_get(self, request):
 		cart_id =request.session.get("cart_id", None)
+		print('1.{cart_id}'.format(cart_id=cart_id))
+		print(request.session.items())
 		qs = self.get_queryset().filter(id=cart_id)
 		if qs.count() == 1:
 			new_object = False
@@ -21,7 +23,10 @@ class CartManager(models.Manager):
 		else:
 			cart_obj = Cart.objects.new(user=request.user)
 			new_object = True
-			request.session['cart_ id'] = cart_obj.id
+			request.session['cart_id'] = cart_obj.id
+			print('2.{cart_id}'.format(cart_id=request.session['cart_id']))
+			print(request.session.items())
+
 		return cart_obj, new_object
 
 	def new(self, user=None):
