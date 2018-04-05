@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 
 from .models import Product
+from carts.models import Cart
 
 
 class ProductFeaturedListView(ListView):
@@ -47,11 +48,13 @@ class ProductDetailView(DetailView):
 	queryset  = Product.objects.all()
 	templates = "products/product_detail.html"
 
-	# def get_context_data(self, *args, **kwargs):
-	# 	context = super().get_context_data(*args, **kwargs)
-	# 	# print(context)
-	# 	context['abc'] = 123
-	# 	return context
+	def get_context_data(self, *args, **kwargs):
+		context = super().get_context_data(*args, **kwargs)
+		request = self.request
+		cart_obj, new_obj = Cart.objects.new_or_get(request)
+		context['carts'] = cart_obj
+		return context
+
 	def get_object(self, *args, **kwargs):
 		request =self.request
 		slug = self.kwargs.get('slug')
