@@ -3,17 +3,19 @@
 {% block content %}
 <div class="row">
 	<div class="col-12 col-md-6 col-lg-6 mx-auto">
-<h1>{{ object.title|title }}</h1>
-{{ object.timestamp|timesince}} ago</br>
-{{ object.description|linebreaks }}</br>
-{% if object.image %}
-<img src="{{ object.image.url }}" class="image-fluid"> </br>
-{% endif %}
+		<h1>{{ object.title|title }}</h1>
+		{{ object.timestamp|timesince}} ago</br>
+		{{ object.description|linebreaks }}</br>
+		{% if object.image %}
+		<img src="{{ object.image.url }}" class="image-fluid"> </br>
+		{% endif %}
  	</div>
 </div>
+
 <div class="row">
 	<div class="col-12 col-md-6 col-lg-6 mx-auto">
-		{% include "products/snippets/cart_update_form.html" with product=object carts=carts %}
+		{% include "products/snippets/cart_update_form.html" with product=object carts=carts%}
+
  	</div>
 
 </div>
