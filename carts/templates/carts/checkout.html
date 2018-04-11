@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if not request.user.is_authenticated %}
+<div class="row">
+	<div class="col-6">
+	 	Login
+	 </div>
+ 	<div class="col-6">
+ 		Guest Login
+ 	</div>
+</div> 
+{% else %}
 <h1>Checkout</h1>
 <p>{{ object.cart.total }}</p>
 <p>{{ object.ship_total }}</p>
 <p>{{ object.total }}</p>
 
-
+{% endif %}
 
 
 {% endblock %} 

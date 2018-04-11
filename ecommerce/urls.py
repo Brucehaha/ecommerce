@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.contrib.auth.views import LogoutView
 from django.contrib import admin
 from django.urls import path, include
-from . import views
 
+from accounts.views import login, register
+from .views import home_page, contact_page, about_page
 from products.views import (ProductListView,
                             product_list_view, 
                             ProductDetailView, 
@@ -30,13 +31,18 @@ from products.views import (ProductListView,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_page, name='home'),
-    path('about/', views.about_page, name='about'),
-    path('contact/', views.contact_page, name='contact'),
-    path('login/', views.login, name='login'),
+    path('', home_page, name='home'),
+    path('about/',about_page, name='about'),
+    path('contact/',contact_page, name='contact'),
+    ##accounts app 
+    path('login/', login, name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('register/', register, name='register'),
+    ##carts app 
     path('cart/', include('carts.urls', namespace='carts')),
-    path('register/', views.register),
+    ##products app
     path('products/', include('products.urls', namespace='products')),
+    ## search app
     path('search/', include('search.urls', namespace='search')),
 
  ]

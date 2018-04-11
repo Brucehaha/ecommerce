@@ -1,7 +1,6 @@
-from django.contrib.auth import authenticate, login as auth_login
 from django.shortcuts import render, redirect
 
-from .forms import ContactForm, LoginForm, RegisterForm
+from .forms import ContactForm
 
 
 def home_page(request):
@@ -34,64 +33,3 @@ def contact_page(request):
 		print(request.POST)
 	return render(request, "contact/view.html", context)
 
-def login(request):
-	form = LoginForm(request.POST or None)
-	context = {
-		"form": form
-	}
-	print("User Logged in")
-	if form.is_valid():
-		print(form.cleaned_data)
-		context['form']=LoginForm()
-		username = form.cleaned_data.get("username")
-		password = form.cleaned_data.get("password")
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			auth_login(request, user)
-			print(request.user.is_authenticated)
-
-			return redirect("/") 
-		else:
-			print("Error")
-
-	return render(request, "auth/login.html", context)
-
-def register(request):
-	form = RegisterForm(request.POST or None)
-	context = {
-		"form": form
-	}
-
-	if form.is_valid():
-		print(form.cleaned_data)
-		username = form.cleaned_data.get("username")
-		email = form.cleaned_data.get("email")
-		password = form.cleaned_data.get("password")
-
-		new_user = User.objects.create_user(username, email, password)
-		print(new_user)
-	return render(request, "auth/register.html", context)    
-
-
-def home_page_old(request):
-	html_="""
-	<!DOCTYPE html>
-	<html lang="en">
-	  <head>
-	    <!-- Required meta tags -->
-	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	    <!-- Bootstrap CSS -->
-	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-	  </head>
-	  <body>
-	    <h1>Hello, world!</h1>
-
-	    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-	    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-	  </body>
-	</html>
-	"""

@@ -18,7 +18,7 @@ def cart_update(request, **kwargs):
 		if product in cart_obj.products.all():
 			cart_obj.products.remove(product)
 		else:
-			cart_obj.products.add(product)
+			cart_obj.products.add(product) 
 	request.session['cart_items'] = cart_obj.products.count()
 	if kwargs:
 		# return redirect(reverse('products:detail', kwargs={'slug':product.slug}))
