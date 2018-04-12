@@ -9,7 +9,21 @@ User = settings.AUTH_USER_MODEL
 
 class CartManager(models.Manager):
 	def new_or_get(self, request):
-		cart_id =request.session.get("cart_id", None)
+		user = request.user
+		cart_id = None
+		if user.is_authenticated:
+			cart_objs = user.cart_set.all() or None
+			if cart_objs:
+				for i in cart_objs:
+					if i.active == True:
+						cart_obj = i
+						cart_id = cart_obj.id
+						request.session["cart_id"] = cart_id
+						break
+			else:
+				cart_id =request.session.get("cart_id", None)
+		else:
+			cart_id =request.session.get("cart_id", None)
 		qs = self.get_queryset().filter(id=cart_id)
 		if qs.count() == 1:
 			new_object = False
@@ -23,10 +37,11 @@ class CartManager(models.Manager):
 			new_object = True
 			request.session['cart_id'] = cart_obj.id
 
+		request.session['cart_items'] = cart_obj.products.count()
 		return cart_obj, new_object
 
 	def new(self, user=None):
-		user_obj = None
+		user_obj = None 
 		if user is not None:
 			if user.is_authenticated :
 				user_obj = user
@@ -41,6 +56,7 @@ class Cart(models.Model):
 	total		= models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
 	updated		= models.DateTimeField(auto_now=True)
 	timestamp	= models.DateTimeField(auto_now_add=True)
+	active		= models.BooleanField(default=True)
 
 	objects=CartManager()
 

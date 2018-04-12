@@ -1,15 +1,18 @@
 from django.contrib.auth import authenticate, login as auth_login
 from django.shortcuts import render, redirect
-
+from carts.models import Cart
 from .forms import LoginForm, RegisterForm
-
+from django.utils.http import is_safe_url
 
 def login(request):
 	form = LoginForm(request.POST or None)
 	context = {
 		"form": form
 	}
-	print("User Logged in")
+
+	next_ = request.session.get('next')
+	next_post = request.session.get('next')
+	redirect_path = next_ or next_post or None 
 	if form.is_valid():
 		print(form.cleaned_data)
 		context['form']=LoginForm()
@@ -18,12 +21,14 @@ def login(request):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			auth_login(request, user)
-			print(request.user.is_authenticated)
-
-			return redirect("/") 
+			## retrive the cart and cart items number
+			Cart.objects.new_or_get(request)
+			if is_safe_url(redirect_path, request.get_host()):
+				return redirect(redirect_path)
+			else:
+				redirect("/") 
 		else:
 			print("Error")
-
 	return render(request, "login.html", context)
 
 def register(request):
