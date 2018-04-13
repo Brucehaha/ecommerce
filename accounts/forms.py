@@ -5,7 +5,7 @@ User = get_user_model()
 
 class GuestForm(forms.Form):
 	email 	= forms.EmailField(
-			widget=forms.PasswordInput(
+			widget=forms.EmailInput(
 				attrs={
 					"class": "form-control",
 				 	"placeholder": "email"
@@ -41,7 +41,7 @@ class RegisterForm(forms.Form):
 			)
 		)
 	email    = forms.EmailField(
-		widget=forms.PasswordInput(
+		widget=forms.EmailInput(
 			attrs={
 				"class": "form-control",
 			 	"placeholder": "email"

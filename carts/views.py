@@ -3,7 +3,7 @@ from django.urls import reverse
 from .models import Cart
 from products.models import Product
 from orders.models import Order
-from accounts.forms import LoginForm
+from accounts.forms import LoginForm, GuestForm
 from accounts.models import BillingProfile
 
 
@@ -32,6 +32,7 @@ def check_out(request):
 	cart_obj, new_cart = Cart.objects.new_or_get(request)
 	order_obj = None
 	form = LoginForm()
+	guest_form = GuestForm()
 	user = request.user
 	billing_profile = None
 	if user.is_authenticated:
@@ -46,6 +47,8 @@ def check_out(request):
 	context = {
 		"object" : order_obj,
 		"form": form,
-		"billing_profile" : billing_profile
+		"billing_profile" : billing_profile,
+		"guest_form" : guest_form
+
 	}
 	return render(request, "carts/checkout.html", context)

@@ -19,7 +19,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib import admin
 from django.urls import path, include
 
-from accounts.views import login, register
+from accounts.views import login, register, guest_register
 from .views import home_page, contact_page, about_page
 from products.views import (ProductListView,
                             product_list_view, 
@@ -38,6 +38,8 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', register, name='register'),
+    path('guest/', guest_register, name='guest_register'),
+
     ##carts app 
     path('cart/', include('carts.urls', namespace='carts')),
     ##products app
