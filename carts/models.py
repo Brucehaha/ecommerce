@@ -11,20 +11,9 @@ class CartManager(models.Manager):
 	def new_or_get(self, request):
 		user = request.user
 		cart_id = None
-		if user.is_authenticated:
-			cart_objs = user.cart_set.all() or None
-			if cart_objs:
-				for i in cart_objs:
-					if i.active == True:
-						cart_obj = i
-						cart_id = cart_obj.id
-						request.session["cart_id"] = cart_id
-						break
-			else:
-				cart_id =request.session.get("cart_id", None)
-		else:
-			cart_id =request.session.get("cart_id", None)
-		qs = self.get_queryset().filter(id=cart_id)
+	
+		cart_id =request.session.get("cart_id", None)
+		qs = self.get_queryset().filter(id=cart_id, active=True)
 		if qs.count() == 1:
 			new_object = False
 			cart_obj = qs.first()
@@ -39,6 +28,21 @@ class CartManager(models.Manager):
 
 		request.session['cart_items'] = cart_obj.products.count()
 		return cart_obj, new_object
+	def load_cart(self, request):
+		user = request.user
+		cart_id = request.session.get("cart_id") or None
+		if user.is_authenticated and not cart_id:
+			cart_objs = user.cart_set.all() or None
+			if cart_objs:
+				for i in cart_objs:
+					if i.active == True:
+						cart_obj = i
+						cart_id = cart_obj.id
+						request.session['cart_items'] = cart_obj.products.count()
+						request.session["cart_id"] = cart_id
+						break
+			
+
 
 	def new(self, user=None):
 		user_obj = None 

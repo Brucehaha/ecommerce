@@ -14,7 +14,9 @@ def guest_register(request):
 
 	if form.is_valid:
 		email = form.cleaned_data.get("email")
+		print(email)
 		BillingProfile.objects.get_or_create(email=email)
+		request.session['guest_email'] = email
 		if is_safe_url(redirect_path, request.get_host()):
 				return redirect(redirect_path)
 		else:
@@ -48,11 +50,11 @@ def login(request):
 		if user is not None:
 			auth_login(request, user)
 			## retrive the cart and cart items number
-			Cart.objects.new_or_get(request)
+			Cart.objects.load_cart(request)
 			if is_safe_url(redirect_path, request.get_host()):
 				return redirect(redirect_path)
 			else:
-				redirect("/") 
+				return redirect("/") 
 		else:
 			print("Error")
 	return render(request, "login.html", context)
