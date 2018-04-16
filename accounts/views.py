@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from carts.models import Cart
 from .forms import LoginForm, RegisterForm, GuestForm
 from django.utils.http import is_safe_url
-from .models import BillingProfile
+from .models import GuestEmail
 
 def guest_register(request):
 	form = GuestForm(request.POST or None)
@@ -14,19 +14,18 @@ def guest_register(request):
 
 	if form.is_valid:
 		email = form.cleaned_data.get("email")
-		print(email)
-		BillingProfile.objects.get_or_create(email=email)
-		request.session['guest_email'] = email
+		new_guest_email = GuestEmail.objects.get_or_create(email=email)
+		request.session['guest_email_id'] = new_guest_email
 		if is_safe_url(redirect_path, request.get_host()):
 				return redirect(redirect_path)
 		else:
-			redirect("/") 
+			redirect("/register/") 
 
 
 	context = {
 		"guest_form": form,
 	} 
-	return render(request, "carts/checkout.html", context)
+	return render(request, "/register/", context)
 
 
 

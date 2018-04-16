@@ -4,7 +4,8 @@ from .models import Cart
 from products.models import Product
 from orders.models import Order
 from accounts.forms import LoginForm, GuestForm
-from accounts.models import BillingProfile
+from billing.models import BillingProfile
+from accounts.models import GuestEmail
 
 
 def cart_page(request):
@@ -35,20 +36,22 @@ def check_out(request):
 	form = LoginForm()
 	guest_form = GuestForm()
 	user = request.user
-	guest_email = request.session.get('guest_email') or None
+	guest_emai_id = request.session.get('guest_email_id')
 	billing_profile = None
+
 	if user.is_authenticated:
 		billing_profile = BillingProfile.objects.get_or_create(user=user, email=user.email)
 		request.session['cart_items'] = 0
-	elif guest_email:
-		billing_profile = BillingProfile.objects.get_or_create(user=None, email=guest_email)
+	elif guest_emai_id is not None:
+		billing_profile = BillingProfile.objects.get_or_create(email=guest_emai_id)
 		request.session['cart_items'] = 0
 		del request.session['guest_email']
-
+	else:
+		pass
 
 	if new_cart or cart_obj.products.count() == 0:
 		return redirect("carts:cart")
-	elif user.is_authenticated or guest_email: 
+	elif billing_profile is not None:  
 		order_obj, new_order_obj = Order.objects.get_or_create(cart=cart_obj)
 		cart_obj.active = False
 		cart_obj.save()
