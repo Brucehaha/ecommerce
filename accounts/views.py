@@ -7,25 +7,22 @@ from .models import GuestEmail
 
 def guest_register(request):
 	form = GuestForm(request.POST or None)
-	print(form)
+	context = {
+		"form": form
+	}
 	next_ = request.GET.get('next')
 	next_post = request.POST.get('next')
 	redirect_path = next_ or next_post or None 
 
-	if form.is_valid:
+	if form.is_valid():
 		email = form.cleaned_data.get("email")
-		new_guest_email = GuestEmail.objects.get_or_create(email=email)
-		request.session['guest_email_id'] = new_guest_email
+		new_guest_email = GuestEmail.objects.create(email=email)
+		request.session['guest_email_id'] = email
 		if is_safe_url(redirect_path, request.get_host()):
 				return redirect(redirect_path)
 		else:
 			redirect("/register/") 
-
-
-	context = {
-		"guest_form": form,
-	} 
-	return render(request, "/register/", context)
+	return redirect("/register/") 
 
 
 

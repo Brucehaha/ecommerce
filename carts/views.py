@@ -31,21 +31,21 @@ def cart_update(request, **kwargs):
 
 def check_out(request):
 	cart_obj, new_cart = Cart.objects.new_or_get(request)
-	print(cart_obj.products.count())
 	order_obj = None
 	form = LoginForm()
 	guest_form = GuestForm()
 	user = request.user
-	guest_emai_id = request.session.get('guest_email_id')
+	guest_email_id = request.session.get('guest_email_id')
 	billing_profile = None
 
 	if user.is_authenticated:
 		billing_profile = BillingProfile.objects.get_or_create(user=user, email=user.email)
 		request.session['cart_items'] = 0
-	elif guest_emai_id is not None:
-		billing_profile = BillingProfile.objects.get_or_create(email=guest_emai_id)
+	elif guest_email_id is not None:
+		guest_email_obj = GuestEmail.objects.get(email=guest_email_id)
+		billing_profile = BillingProfile.objects.get_or_create(email=guest_email_obj)
 		request.session['cart_items'] = 0
-		del request.session['guest_email']
+		del request.session['guest_email_id']
 	else:
 		pass
 

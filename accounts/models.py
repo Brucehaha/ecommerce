@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 
 
 class GuestEmail(models.Model):
@@ -10,3 +10,10 @@ class GuestEmail(models.Model):
 
 	def __str__(self):
 		return self.email
+	
+	def save(self, *args, **kwargs):
+		''' On save, update timestamps'''
+		if not self.id:
+			self.created=timezone.now()
+		self.updated = timezone.now()
+		return super(GuestEmail, self).save(*args, **kwargs)
