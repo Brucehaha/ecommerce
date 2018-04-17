@@ -16,7 +16,7 @@ def guest_register(request):
 
 	if form.is_valid():
 		email = form.cleaned_data.get("email")
-		new_guest_email = GuestEmail.objects.create(email=email)
+		new_guest_email = GuestEmail.objects.get_or_create(email=email)
 		request.session['guest_email_id'] = email
 		if is_safe_url(redirect_path, request.get_host()):
 				return redirect(redirect_path)
@@ -46,6 +46,11 @@ def login(request):
 		if user is not None:
 			auth_login(request, user)
 			## retrive the cart and cart items number
+			try:
+				del request.session['guest_email_id']
+			except KeyError:
+				pass
+
 			Cart.objects.load_cart(request)
 			if is_safe_url(redirect_path, request.get_host()):
 				return redirect(redirect_path)

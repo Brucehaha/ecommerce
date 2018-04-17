@@ -30,8 +30,9 @@ class CartManager(models.Manager):
 		return cart_obj, new_object
 	def load_cart(self, request):
 		user = request.user
+		## loading cart when login, if there is cart session
 		cart_id = request.session.get("cart_id") or None
-		if user.is_authenticated and not cart_id:
+		if user.is_authenticated and cart_id is None:
 			cart_objs = user.cart_set.all() or None
 			if cart_objs:
 				for i in cart_objs:
@@ -83,7 +84,7 @@ m2m_changed.connect(cart_m2m_changed, sender=Cart.products.through)
 
 
 def cart_pre_save(sender, instance, *args, **kwargs):
-	instance.total = Decimal(instance.subtotal)*Decimal(1.1)
+	instance.total = round(Decimal(instance.subtotal)*Decimal(1.1),2)
 
 pre_save.connect(cart_pre_save, sender=Cart)
 

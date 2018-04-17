@@ -37,27 +37,36 @@ def check_out(request):
 	user = request.user
 	guest_email_id = request.session.get('guest_email_id')
 	billing_profile = None
-
-	if user.is_authenticated:
-		billing_profile = BillingProfile.objects.get_or_create(user=user, email=user.email)
-		request.session['cart_items'] = 0
-	elif guest_email_id is not None:
-		guest_email_obj = GuestEmail.objects.get(email=guest_email_id)
-		billing_profile = BillingProfile.objects.get_or_create(email=guest_email_obj)
-		request.session['cart_items'] = 0
-		del request.session['guest_email_id']
-	else:
-		pass
+	paid = None
 
 	if new_cart or cart_obj.products.count() == 0:
 		return redirect("carts:cart")
-	elif billing_profile is not None:  
-		order_obj, new_order_obj = Order.objects.get_or_create(cart=cart_obj)
-		cart_obj.active = False
-		cart_obj.save()
+	else:
+		pass
+	if user.is_authenticated:
+		billing_profile, new_billingprofile= BillingProfile.objects.get_or_create(user=user, email=user.email)
+	elif guest_email_id is not None:
+		guest_email_obj, new_guest_email_obj= GuestEmail.objects.get_or_create(email=guest_email_id)
+		billing_profile, new_billingprofile = BillingProfile.objects.get_or_create(email=guest_email_obj)
+	else:
+		pass
+	
+	if billing_profile is not None:
+		order_qs =  Order.objects.filter(cart=cart_obj, billingprofile=billing_profile, active=True)
+		if order_qs.count()==1:
+			order_obj = order_qs.first()
+		else:
+			older_order_qs = Order.objects.exclude(billingprofile=billing_profile).filter(cart=cart_obj, active=True)
+			if older_order_qs.exists():
+				older_order_qs.update(active=False)
+			order_obj = Order.objects.create(billingprofile=billing_profile, cart=cart_obj)
+			#if customer make a payment after checkout
+			if paid is not None:
+				cart_obj.active = False
+				cart_obj.save()
 
-	context = {
-		"object" : order_obj,
+	context={
+		"order_obj" : order_obj,
 		"form": form,
 		"billing_profile" : billing_profile,
 		"guest_form" : guest_form
