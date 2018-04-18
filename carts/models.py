@@ -28,22 +28,16 @@ class CartManager(models.Manager):
 
 		request.session['cart_items'] = cart_obj.products.count()
 		return cart_obj, new_object
+
 	def load_cart(self, request):
 		user = request.user
 		## loading cart when login, if there is cart session
 		cart_id = request.session.get("cart_id") or None
 		if user.is_authenticated and cart_id is None:
-			cart_objs = user.cart_set.all() or None
-			if cart_objs:
-				for i in cart_objs:
-					if i.active == True:
-						cart_obj = i
-						cart_id = cart_obj.id
-						request.session['cart_items'] = cart_obj.products.count()
-						request.session["cart_id"] = cart_id
-						break
-			
-
+			cart_objs = user.cart_set.all().filter(active=True)
+			cart_obj = cart_objs.last()
+			request.session['cart_items'] = cart_obj.products.count()
+			request.session["cart_id"] = cart_obj.id
 
 	def new(self, user=None):
 		user_obj = None 

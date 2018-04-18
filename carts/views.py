@@ -35,35 +35,34 @@ def check_out(request):
 	form = LoginForm()
 	guest_form = GuestForm()
 	user = request.user
-	guest_email_id = request.session.get('guest_email_id')
-	billing_profile = None
-	paid = None
 
 	if new_cart or cart_obj.products.count() == 0:
 		return redirect("carts:cart")
 	else:
 		pass
-	if user.is_authenticated:
-		billing_profile, new_billingprofile= BillingProfile.objects.get_or_create(user=user, email=user.email)
-	elif guest_email_id is not None:
-		guest_email_obj, new_guest_email_obj= GuestEmail.objects.get_or_create(email=guest_email_id)
-		billing_profile, new_billingprofile = BillingProfile.objects.get_or_create(email=guest_email_obj)
-	else:
-		pass
-	
+		
+	billing_profile, new_billing_profile = BillingProfile.objects.new_or_get(request)
+
 	if billing_profile is not None:
-		order_qs =  Order.objects.filter(cart=cart_obj, billingprofile=billing_profile, active=True)
-		if order_qs.count()==1:
-			order_obj = order_qs.first()
-		else:
-			older_order_qs = Order.objects.exclude(billingprofile=billing_profile).filter(cart=cart_obj, active=True)
-			if older_order_qs.exists():
-				older_order_qs.update(active=False)
-			order_obj = Order.objects.create(billingprofile=billing_profile, cart=cart_obj)
-			#if customer make a payment after checkout
-			if paid is not None:
-				cart_obj.active = False
-				cart_obj.save()
+		'''check if order is created, if created, retrieve the data, if not, 
+		firstly check the deactivate the order with same cart, them create new order based on the same cart'''
+		order_obj, oder_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
+
+		##->moved to order manager
+		# #forbiden create new order with same cart repeately
+		# order_qs =  Order.objects.filter(cart=cart_obj, billing_profile=billing_profile, active=True)
+		# if order_qs.count()==1:
+		# 	order_obj = order_qs.first()
+		# else:
+		# 	# get rid of the olde order and create the new order --->the following code has been moved to the order manager
+		# 	# older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
+		# 	# if older_order_qs.exists():
+		# 	# 	older_order_qs.update(active=False)
+		# 	order_obj = Order.objects.create(billing_profile=billing_profile, cart=cart_obj)
+		# 	#if customer mak  e a payment after checkout, get rid the old cart, if not paid, load the cart when login again
+		# 	if paid is not None:
+		# 		cart_obj.active = False
+		# 		cart_obj.save()
 
 	context={
 		"order_obj" : order_obj,
