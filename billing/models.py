@@ -22,7 +22,6 @@ class BillingProfileManager(models.Manager):
 		elif guest_email_id is not None:
 			guest_email_obj, new_guest_email_obj= GuestEmail.objects.get_or_create(email=guest_email_id)
 			obj, created  = self.model.objects.get_or_create(email=guest_email_obj)
-
 		return obj, created
 
 
