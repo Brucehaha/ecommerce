@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib import admin
 from django.urls import path, include
-
+from addresses.views import addess_create
 from accounts.views import login, register, guest_register
 from .views import home_page, contact_page, about_page
 from products.views import (ProductListView,
@@ -46,6 +46,8 @@ urlpatterns = [
     path('products/', include('products.urls', namespace='products')),
     ## search app
     path('search/', include('search.urls', namespace='search')),
+    ## address 
+    path('accounts/address', addess_create, name='address'),
 
  ]
 

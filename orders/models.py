@@ -1,6 +1,7 @@
 from django.db import models
 from carts.models import Cart
 from billing.models import BillingProfile
+from addresses.models import Address
 from ecommerce.utils import unique_order_id
 from django.db.models.signals import pre_save, post_save
 from decimal import *
@@ -38,13 +39,15 @@ class OrderManager(models.Manager):
 
 
 class Order(models.Model):
-	billing_profile = models.ForeignKey(BillingProfile, null=True, blank=True, on_delete=models.DO_NOTHING)
-	order_id		= models.CharField(max_length=120, blank=True)
-	cart  			= models.ForeignKey(Cart, on_delete=models.CASCADE)
-	status			= models.CharField(max_length=120, default='created', choices=ORDER_STATUS_CHOICES)
-	ship_total		= models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
-	total			= models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
-	active			= models.BooleanField(default=True)
+	billing_profile 	= models.ForeignKey(BillingProfile, null=True, blank=True, on_delete=models.DO_NOTHING)
+	shipping_address	= models.ForeignKey(Address, related_name='shipping', null=True, blank=True, on_delete=models.DO_NOTHING)
+	billing_address		= models.ForeignKey(Address, related_name='billing', null=True, blank=True, on_delete=models.DO_NOTHING)
+	order_id			= models.CharField(max_length=120, blank=True)
+	cart  				= models.ForeignKey(Cart, on_delete=models.CASCADE)
+	status				= models.CharField(max_length=120, default='created', choices=ORDER_STATUS_CHOICES)
+	ship_total			= models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
+	total				= models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
+	active				= models.BooleanField(default=True)
 
 	objects=OrderManager()
 
