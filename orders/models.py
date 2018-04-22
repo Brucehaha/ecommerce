@@ -20,7 +20,10 @@ ORDER_STATUS_CHOICES=(
 class OrderManager(models.Manager):
 	def new_or_get(self, billing_profile, cart_obj):
 		'forbiden create new order with same cart repeately'
-		qs = self.get_queryset().filter(cart=cart_obj, billing_profile=billing_profile, active=True)
+		qs = self.get_queryset().filter(cart=cart_obj, 
+										billing_profile=billing_profile, 
+										active=True,
+										status='created')
 		if qs.count()==1:
 			obj = qs.first()
 			new_obj = False
@@ -59,7 +62,19 @@ class Order(models.Model):
 		ship_total = self.ship_total
 		self.total = round(Decimal(cart_total)+Decimal(ship_total),2)
 		self.save() 
-
+	
+	def check_done(self):
+		shipping_address = self.shipping_address
+		billing_address = self.billing_profile
+		total = self.total
+		billing_profile = self.billing_profile
+		if shipping_address and billing_profile and billing_profile and total > 0:
+			return True
+		return False
+	def mark_paid(self):
+		if self.check_done:
+			self.status = "paid"
+			self.save()
 
 def pre_save_order_id(sender, instance, *args, **kwargs):
 	if not instance.order_id:

@@ -9,7 +9,6 @@ from accounts.models import GuestEmail
 from addresses.forms import AddressForm
 from addresses.models import Address
 
-
 def cart_page(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	return render(request, "carts/home.html", {'carts':cart_obj})
@@ -38,6 +37,8 @@ def check_out(request):
 	address_form = AddressForm()
 	guest_form = GuestForm()
 	shipping_address_id = request.session.get('shipping_address_id')
+	billing_address_id = request.session.get('billing_address_id')
+	address_qs = None
 
 	if new_cart or cart_obj.products.count() == 0:
 		return redirect("carts:cart")
@@ -47,11 +48,34 @@ def check_out(request):
 	billing_profile, new_billing_profile = BillingProfile.objects.new_or_get(request)
 
 	if billing_profile is not None:
+		if request.user.is_authenticated:
+			address_qs = Address.objects.filter(billing_profile=billing_profile)
 		order_obj, oder_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
 
 		if shipping_address_id is not None:
 			shipping_address_obj = Address.objects.get(id=shipping_address_id)
 			order_obj.shipping_address = shipping_address_obj
+			del request.session['shipping_address_id']
+
+		if billing_address_id is not None:
+			print(billing_address_id)
+			billing_address_obj = Address.objects.get(id=billing_address_id)
+			order_obj.billing_address = billing_address_obj
+			del request.session['billing_address_id']
+		if billing_address_id or shipping_address_id:
+			order_obj.save()
+		'''
+		update order_obj to done, "paid"
+		del request.session['card_id']
+		redirect "success"
+		'''
+	if request.method == "POST":
+		is_done = order_obj.check_done()
+		if is_done:
+			order_obj.mark_paid()
+			del request.session['cart_id']
+			del request.session['cart_items']
+			return redirect("carts:success")
 
 	context={
 		"order_obj" : order_obj,
@@ -59,7 +83,13 @@ def check_out(request):
 		"billing_profile" : billing_profile,
 		"guest_form" : guest_form,
 		"address_form" : address_form,
-		"shipping_address_id" : shipping_address_id
+		"address_qs" : address_qs,
 
 	}
 	return render(request, "carts/checkout.html", context)
+
+
+
+
+def success(request):
+	return render(request, "carts/success.html")
