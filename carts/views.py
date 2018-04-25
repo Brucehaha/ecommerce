@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.urls import reverse 
 from .models import Cart
 from products.models import Product
@@ -14,20 +15,26 @@ def cart_page(request):
 	return render(request, "carts/home.html", {'carts':cart_obj})
 
 
-def cart_update(request, **kwargs):
+def cart_update(request):
 	product_id = request.POST.get('product_id')
 	product = Product.objects.get(id=product_id)
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	if cart_obj is not None:
 		if product in cart_obj.products.all():
 			cart_obj.products.remove(product)
+			added = False
 		else: 
-			cart_obj.products.add(product) 
-	if kwargs:
-		# return redirect(reverse('products:detail', kwargs={'slug':product.slug}))
+			cart_obj.products.add(product)
+			added = True
+
+		request.session['cart_items'] = cart_obj.products.count()
+		if request.is_ajax():
+			json_data = {
+				"added": added,
+				"removed": not added,
+			}
+			return JsonResponse(json_data)
 		return redirect("carts:cart")
-	else:
-		return redirect(product.get_absolute_url())
 
 
 def check_out(request):

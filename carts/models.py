@@ -26,7 +26,6 @@ class CartManager(models.Manager):
 			new_object = True
 			request.session['cart_id'] = cart_obj.id
 
-		request.session['cart_items'] = cart_obj.products.count()
 		return cart_obj, new_object
 
 	def load_cart(self, request):
