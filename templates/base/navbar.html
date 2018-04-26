@@ -43,8 +43,7 @@
 
      
           <li class="nav-item {% if request.path == cart_url %} active {% endif %}">
-          <a class="nav-link" href="{{ cart_url }}">{{ request.session.cart_items }}<i class="fas fa-shopping-cart"></i></a>
-        </li>
+          <a class="nav-link" href="{{ cart_url }}"><span class="itemCount">{{ request.session.cart_items }}</span> <i class="fas fa-shopping-cart"></i></a>
      <!--  <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown

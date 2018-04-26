@@ -32,6 +32,7 @@ def cart_update(request):
 			json_data = {
 				"added": added,
 				"removed": not added,
+				"itemCount": cart_obj.products.count(),
 			}
 			return JsonResponse(json_data)
 		return redirect("carts:cart")
