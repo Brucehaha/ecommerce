@@ -6,6 +6,7 @@ from django.urls import path, include
 from addresses.views import addess_create, address_choose
 from accounts.views import login, register, guest_register
 from .views import home_page, contact_page, about_page
+from carts.views import cart_refresh
 from products.views import (ProductListView,
                             product_list_view, 
                             ProductDetailView, 
@@ -33,7 +34,9 @@ urlpatterns = [
     path('search/', include('search.urls', namespace='search')),
     ## address 
     path('accounts/address', addess_create, name='address'),
-     path('accounts/address_choose', address_choose, name='address_choose'),
+    path('accounts/address_choose', address_choose, name='address_choose'),
+    path('api/cart/', cart_refresh, name='cart_refresh'),
+
 
  ]
 

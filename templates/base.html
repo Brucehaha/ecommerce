@@ -30,39 +30,72 @@
           var actionEndpoint = thisForm.attr("data-endpoint"); //api endpoint
           var httpMethod = thisForm.attr("method");
           var formData = thisForm.serialize();
+          console.log(formData)
 
 
           $.ajax({
             url: actionEndpoint,
             method:httpMethod,
             data: formData,
-            success: function(data){
-              console.log("success")
-              console.log(data)
-              console.log("Added", data.added)
-              console.log("Removed", data.removed)
-              var submitSpan = thisForm.find(".submit-span")
-              if (data.added){
-                submitSpan.html('In Cart<button class="btn btn-link" type="submit">remove?</button>')
+            success: function(newdata){
+              console.log("Added", newdata.added);
+              console.log("Removed", newdata.removed);
+              var submitSpan = thisForm.find(".submit-span");
+              if (newdata.added){
+                submitSpan.html('In Cart<button class="btn btn-link" type="submit">remove?</button>');
               } else {
-                submitSpan.html('<button class="btn btn-outline-success" type="submit">Add to cart</button>')
+                submitSpan.html('<button class="btn btn-outline-success" type="submit">Add to cart</button>');
               }
-              var itemCount = $(".itemCount")
-              itemCount.text(data.itemCount)
-              console.log(data.itemCount)
-
+              var itemCount = $(".itemCount");
+              itemCount.text(newdata.itemCount);
+              if(window.location.href.indexOf("cart") != -1){
+                refreshCart();
+              };
             },
             error: function(errorData){
               console.log("error")
               console.log(errorData)
-            }
+            },
+          });
 
+      });
+
+        function refreshCart(){
+          var cartList = $(".cartList")
+          var subtotal = $(".subtotal")
+          var total = $(".total")
+
+           $.ajax({
+              url: "/api/cart/",
+              method: "GET",
+              success: function(data){
+                console.log("success");
+                console.log(data)
+                length = data.products.length
+                if (length > 0){
+
+                  cartList.html(" ");
+                  i = length
+                  $.each(data.products, function(index, value){
+
+                    cartList.prepend('<tr><th scope="row">'+ i +'</th><td>'+value.name+'</td><td>'+value.price+'</td></tr>')
+                    i--
+                  });
+
+                  total.text(data.total)
+                  subtotal.text(data.subtotal)
+
+                } else {
+                    window.location.href
+                }
+
+
+
+              },
            })
-
-
-        })
+        };
  
-      })
+  })
 
     </script>
   </body> 

@@ -10,6 +10,14 @@ from accounts.models import GuestEmail
 from addresses.forms import AddressForm
 from addresses.models import Address
 
+
+def cart_refresh(request):
+	cart_obj, new_obj = Cart.objects.new_or_get(request)
+	products = cart_obj.products.all()
+	products_array = [{"name":x.title, "price":x.price} for x in products]
+	return JsonResponse({"products": products_array,"subtotal":cart_obj.subtotal, "total":cart_obj.total})
+
+
 def cart_page(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	return render(request, "carts/home.html", {'carts':cart_obj})
@@ -27,7 +35,7 @@ def cart_update(request):
 			cart_obj.products.add(product)
 			added = True
 
-		request.session['cart_items'] = cart_obj.products.count()
+		request.session['cart_items'] = cart_obj.products.count() 
 		if request.is_ajax():
 			json_data = {
 				"added": added,
@@ -37,13 +45,12 @@ def cart_update(request):
 			return JsonResponse(json_data)
 		return redirect("carts:cart")
 
-
+ 
 def check_out(request):
 	cart_obj, new_cart = Cart.objects.new_or_get(request)
-	order_obj = None
+	order_obj = None 
 	form = LoginForm()
 	address_form = AddressForm()
-	guest_form = GuestForm()
 	shipping_address_id = request.session.get('shipping_address_id')
 	billing_address_id = request.session.get('billing_address_id')
 	address_qs = None
