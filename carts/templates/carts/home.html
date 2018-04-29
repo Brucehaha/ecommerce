@@ -12,18 +12,18 @@
           </tr>
         </thead>
         <tbody class="cartBody">
-             <span class="cartList">
           {% for product in carts.products.all %}
-       
-          <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ product.title }} {% include "products/snippets/cart_update_form.html" with product=product carts=carts in_cart=True %}
-      </td>
-            <td>{{ product.price}}</td>
-          </tr>
-          {% endfor %}
-                  </span>
+            <tr class="cartList">
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ product.title }} 
+                {% include "products/snippets/remove-form.html" with product_id=product.id %}
+              </td>
+              <td>{{ product.price}}</td>
+            </tr>
+            {% endfor %}
 
+        </tbody>
+        <tbody>
           <tr>
             <th scope="row"></th>
             <td colspan="2"><b>Subtotal</b> <span class="subtotal">{{ carts.subtotal }}</span></td>
@@ -44,7 +44,9 @@
 {% else %}
     <p>Cart is empty</p>
   {% endif %}
-
+<div class="remove-form" style="display:none">
+{% include "products/snippets/remove-form.html" %}
+</div>
 
 
 

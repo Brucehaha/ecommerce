@@ -61,7 +61,8 @@
       });
 
         function refreshCart(){
-          var cartList = $(".cartList")
+          var cartBody = $(".cartBody")
+          // var cartList = cartBody.find(".cartList")
           var subtotal = $(".subtotal")
           var total = $(".total")
 
@@ -69,24 +70,28 @@
               url: "/api/cart/",
               method: "GET",
               success: function(data){
-                console.log("success");
-                console.log(data)
-                length = data.products.length
-                if (length > 0){
+                var removeForm = $(".remove-form");
+                var length = data.products.length;
 
-                  cartList.html(" ");
+                if (length > 0){
+                  cartBody.html(" ");
                   i = length
                   $.each(data.products, function(index, value){
-
-                    cartList.prepend('<tr><th scope="row">'+ i +'</th><td>'+value.name+'</td><td>'+value.price+'</td></tr>')
+                    var productRemoveForm  = removeForm.clone();
+                    productRemoveForm.find(".product_id").val(value.id);
+                    console.log(productRemoveForm.html());
+                    cartBody.prepend('<tr><th scope="row">'+ i +'</th><td><a href="'+value.url+'">'+value.name+'</a>'+productRemoveForm.html()+'</td><td>'+value.price+'</td></tr>')
                     i--
                   });
 
-                  total.text(data.total)
-                  subtotal.text(data.subtotal)
+                  total.text(data.total);
+                  subtotal.text(data.subtotal);
 
                 } else {
-                    window.location.href
+                 console.log("else ");
+                 console.log(window.location.href);
+                 window.location.href='./';
+
                 }
 
 

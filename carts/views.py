@@ -14,7 +14,7 @@ from addresses.models import Address
 def cart_refresh(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	products = cart_obj.products.all()
-	products_array = [{"name":x.title, "price":x.price} for x in products]
+	products_array = [{"url":x.get_absolute_url(), "name":x.title, "price":x.price, "id":x.id} for x in products]
 	return JsonResponse({"products": products_array,"subtotal":cart_obj.subtotal, "total":cart_obj.total})
 
 
