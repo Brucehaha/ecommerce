@@ -8,6 +8,7 @@
     <title>Base Template</title>
     {% include 'base/css.html' %}
     {% block base_head %} {% endblock %}
+
   </head>
   <body>
     {% include 'base/navbar.html' with brand_name='eCommerce' %}
@@ -21,6 +22,32 @@
 
     <script>
       $(document).ready(function(){
+
+        var searchForm =$(".search-form");
+        var searchFormInput = searchForm.find("[name='q']");
+        var searchFormBtn = searchForm.find("[type='submit']");
+        var typingTimer;
+        var searchTimer;
+        searchFormInput.keyup(function(event){
+          clearTimeout(typingTimer);
+          
+          typingTimer = setTimeout(productSearch, 500);
+
+        });
+
+        function productSearch(){
+          productSearching();
+          setTimeout(function(){
+            window.location.href="/search/?q="+searchFormInput.val()
+          }, 1000)
+
+        }
+
+        function productSearching(){
+          searchFormBtn.addClass("disabled")
+          searchFormBtn.html('<i  class="fa fa-spinner fa-spin"></i>Search...')
+        }
+
         var productForm = $(".form-product-ajax")
 
         productForm.submit(function(event){

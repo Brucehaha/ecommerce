@@ -29,6 +29,15 @@ class ProductFeaturedDetailView(DetailView):
 class ProductListView(ListView):
 	templates = "products/product_list.html"
 	paginate_by = 3
+
+
+	def get_context_data(self, *args, **kwargs):
+		context = super().get_context_data(*args, **kwargs)
+		request = self.request
+		cart_obj, new_obj = Cart.objects.new_or_get(request)
+		context['carts'] = cart_obj
+		return context
+		
 	def get_queryset(self, *args, **kwargs):
 		request = self.request
 		return Product.objects.all()
@@ -39,6 +48,7 @@ def product_list_view(request):
 	context  ={
 		'object_list':queryset
 	}
+
 
 	return render(request, "products/product_list.html", context)
 
