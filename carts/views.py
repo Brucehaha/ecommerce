@@ -51,6 +51,7 @@ def check_out(request):
 	order_obj = None 
 	form = LoginForm()
 	address_form = AddressForm()
+	guest_form = GuestForm()
 	shipping_address_id = request.session.get('shipping_address_id')
 	billing_address_id = request.session.get('billing_address_id')
 	address_qs = None
@@ -88,8 +89,12 @@ def check_out(request):
 		is_done = order_obj.check_done()
 		if is_done:
 			order_obj.mark_paid()
-			del request.session['cart_id']
-			del request.session['cart_items']
+			try:
+				del request.session['cart_id']
+				del request.session['cart_items']
+				del request.session['guest_email_id']
+			except KeyError:
+				pass
 			return redirect("carts:success")
 
 	context={
