@@ -15,7 +15,7 @@
     <div class="container">
     {% block content %} {% endblock %}
     </div>
-    
+
 
 
     {% include 'base/js.html' %}
@@ -23,17 +23,49 @@
     <script>
       $(document).ready(function(){
 
+// submit contact details
+        var contactForm = $(".contact-form");
+        var contactFormMethod = contactForm.attr("method")
+        var contactFormEndpoint = contactForm.attr("action")
+        contactForm.submit(function(event){
+          event.preventDefault()
+          var contactFormData = contactForm.serialize();
+          $.ajax({
+            method: contactFormMethod,
+            url: contactFormEndpoint,
+            data: contactFormData,
+            success: function(data){
+              console.log(contactForm)
+              contentForm[0].reset()
+              $.alert({
+                title:"Success",
+                content:"data.message",
+                theme: "modern",
+              })
+            },
+            error: function(error){
+              $.alert({
+                title:"Oops",
+                content:" An error occured",
+                theme: "modern",
+              })
+            },
+        })
+      })
+
+// search form loading product when keyup
         var searchForm =$(".search-form");
         var searchFormInput = searchForm.find("[name='q']");
         var searchFormBtn = searchForm.find("[type='submit']");
         var typingTimer;
         var searchTimer;
+
         searchFormInput.keyup(function(event){
-          clearTimeout(typingTimer);
-          
+          clearTimeout(typingTimer)
+
           typingTimer = setTimeout(productSearch, 500);
 
-        });
+        })
 
         function productSearch(){
           productSearching();
@@ -48,8 +80,10 @@
           searchFormBtn.html('<i  class="fa fa-spinner fa-spin"></i>Search...')
         }
 
-        var productForm = $(".form-product-ajax")
 
+
+// cart update button js
+        var productForm = $(".form-product-ajax")
 
         productForm.submit(function(event){
           event.preventDefault();
@@ -85,9 +119,12 @@
               console.log("error")
               console.log(errorData)
             },
-          });
+          })
 
-      });
+      })
+
+
+// cart refresh when remove item
 
         function refreshCart(){
           var cartBody = $(".cartBody")
@@ -127,12 +164,14 @@
               console.log(errorData)
             },
            })
-        };
- 
+        }
+
   })
 
+
+
     </script>
-  </body> 
+  </body>
 
 
 </html>
