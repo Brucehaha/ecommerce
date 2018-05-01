@@ -1,5 +1,5 @@
-from django.http import Http404
-from django.views.generic import ListView, DetailView 
+from django.http import Http404, JsonResponse
+from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 
 from .models import Product
@@ -13,7 +13,7 @@ class ProductFeaturedListView(ListView):
 	def get_queryset(self, *args, **kwargs):
 		request = self.request
 		return Product.objects.featured()
-# 
+#
 
 class ProductFeaturedDetailView(DetailView):
 	queryset = Product.objects.featured()
@@ -37,7 +37,7 @@ class ProductListView(ListView):
 		cart_obj, new_obj = Cart.objects.new_or_get(request)
 		context['carts'] = cart_obj
 		return context
-		
+
 	def get_queryset(self, *args, **kwargs):
 		request = self.request
 		return Product.objects.all()
@@ -89,7 +89,7 @@ def product_detail_view(request, pk=None, *args, **kwargs):
 	# except Product.DoesNotExist:
 	# 	print('no product here')
 	# 	raise Http404("Product doesn't exit")
-	# except: 
+	# except:
 	# 	print("huh?")
 	qs = Product.objects.get_by_id(id=pk)
 	if qs.exists() and qs.count() == 1:
