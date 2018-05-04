@@ -8,8 +8,8 @@ from accounts.views import login, register, guest_register
 from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
 from products.views import (ProductListView,
-                            product_list_view, 
-                            ProductDetailView, 
+                            product_list_view,
+                            ProductDetailView,
                             product_detail_view,
                             ProductFeaturedListView,
                             ProductFeaturedDetailView,
@@ -20,19 +20,19 @@ urlpatterns = [
     path('', home_page, name='home'),
     path('about/',about_page, name='about'),
     path('contact/',contact_page, name='contact'),
-    ##accounts app 
+    ##accounts app
     path('login/', login, name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', register, name='register'),
     path('guest/', guest_register, name='guest_register'),
 
-    ##carts app 
+    ##carts app
     path('cart/', include('carts.urls', namespace='carts')),
     ##products app
     path('products/', include('products.urls', namespace='products')),
     ## search app
     path('search/', include('search.urls', namespace='search')),
-    ## address 
+    ## address
     path('accounts/address', addess_create, name='address'),
     path('accounts/address_choose', address_choose, name='address_choose'),
     path('api/cart/', cart_refresh, name='cart_refresh'),
