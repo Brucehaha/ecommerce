@@ -1,0 +1,44 @@
+[
+{
+    "model": "products.product",
+    "pk": 1,
+    "fields": {
+        "title": "T-shirt",
+        "slug": "t-shirt",
+        "description": "This is a great T-Shirt",
+        "price": "59.00",
+        "image": "products/2018Apr17/preview_646258487..jpg",
+        "featured": false,
+        "active": true,
+        "timestamp": "2018-03-27T01:01:48.427Z"
+    }
+},
+{
+    "model": "products.product",
+    "pk": 2,
+    "fields": {
+        "title": "hat",
+        "slug": "hat",
+        "description": "This is a nice Hat",
+        "price": "36.00",
+        "image": "products/2018Apr17/hat_672519588..jpg",
+        "featured": false,
+        "active": true,
+        "timestamp": "2018-03-27T01:01:48.427Z"
+    }
+},
+{
+    "model": "products.product",
+    "pk": 3,
+    "fields": {
+        "title": "Computer",
+        "slug": "computer",
+        "description": "Fancy computer is good for playing games and programing!!",
+        "price": "1900.96",
+        "image": "products/2018Apr17/preview_700194338..jpg",
+        "featured": true,
+        "active": true,
+        "timestamp": "2018-03-27T01:01:48.427Z"
+    }
+}
+]

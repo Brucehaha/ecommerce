@@ -1,11 +1,12 @@
 from django.db import models
 from django.utils import timezone
-
+from django.db.models.signals import pre_save, post_save
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.utils.translation import ugettext_lazy as _
 
 
 
@@ -51,12 +52,15 @@ class UserManager(BaseUserManager):
         return user
 
 
-class myUser(AbstractBaseUser):
+class MyUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
         unique=True,
     )
+    username = models.CharField(_('user name'), max_length=30, blank=True, null=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False)
@@ -99,6 +103,14 @@ class myUser(AbstractBaseUser):
     def is_active(self):
         "Is the user active?"
         return self.active
+
+
+def user_pre_save_receiver(sender, instance, *args, **kwargs):
+	if not instance.username:
+		instance.username = instance.get_short_name()
+
+pre_save.connect(user_pre_save_receiver, sender=MyUser)
+
 
 
 class GuestEmail(models.Model):

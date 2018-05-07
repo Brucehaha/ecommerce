@@ -1,10 +1,16 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from .models import MyUser as User
 
 class RegisterForm(forms.ModelForm):
+	email    = forms.EmailField(
+		widget=forms.EmailInput(
+			attrs={
+				"class": "form-control ",
+			 	"placeholder": "email"
+			 	}
+			)
+		)
 	password = forms.CharField(
 			widget=forms.PasswordInput(
 				attrs={
@@ -14,7 +20,15 @@ class RegisterForm(forms.ModelForm):
 				)
 
 			)
-	password2= forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"}))
+	password2= forms.CharField(
+			label = 'Password Confirmation',
+			widget=forms.PasswordInput(
+				attrs={
+					"class": "form-control",
+					"placeholder": "Password"
+				}
+				)
+			)
 
 	class Meta:
 		model = User
@@ -40,11 +54,12 @@ class UserAdminCreationForm(forms.ModelForm):
 	"""A form for creating new users. Includes all the required
 	fields, plus a repeated password."""
 	password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-	password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+	password2 = forms.CharField(label='Password (again)', widget=forms.PasswordInput)
 
 	class Meta:
 		model = User
-		fields = ('email',)
+		fields = ['email','username']
+
 
 	def clean_password2(self):
 	# Check that the two password entries match
@@ -91,6 +106,8 @@ class GuestForm(forms.Form):
 				 	}
 				)
 			)
+
+
 class LoginForm(forms.Form):
 	username = forms.CharField(
 		widget=forms.TextInput(
