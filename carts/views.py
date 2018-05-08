@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.urls import reverse 
+from django.urls import reverse
 from .models import Cart
 from products.models import Product
 from orders.models import Order
@@ -31,11 +31,11 @@ def cart_update(request):
 		if product in cart_obj.products.all():
 			cart_obj.products.remove(product)
 			added = False
-		else: 
+		else:
 			cart_obj.products.add(product)
 			added = True
 
-		request.session['cart_items'] = cart_obj.products.count() 
+		request.session['cart_items'] = cart_obj.products.count()
 		if request.is_ajax():
 			json_data = {
 				"added": added,
@@ -45,10 +45,10 @@ def cart_update(request):
 			return JsonResponse(json_data)
 		return redirect("carts:cart")
 
- 
+
 def check_out(request):
 	cart_obj, new_cart = Cart.objects.new_or_get(request)
-	order_obj = None 
+	order_obj = None
 	form = LoginForm()
 	address_form = AddressForm()
 	guest_form = GuestForm()
@@ -89,6 +89,7 @@ def check_out(request):
 		is_done = order_obj.check_done()
 		if is_done:
 			order_obj.mark_paid()
+			cart_obj.cart_checkout()
 			try:
 				del request.session['cart_id']
 				del request.session['cart_items']

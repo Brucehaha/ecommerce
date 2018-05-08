@@ -4,15 +4,11 @@ from django.contrib.auth.views import LogoutView
 from django.contrib import admin
 from django.urls import path, include
 from addresses.views import addess_create, address_choose
-from accounts.views import login, register, guest_register
+from accounts.views import login, RegisterView, guest_register
 from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
 from products.views import (ProductListView,
-                            product_list_view,
                             ProductDetailView,
-                            product_detail_view,
-                            ProductFeaturedListView,
-                            ProductFeaturedDetailView,
                             )
 
 urlpatterns = [
@@ -23,7 +19,7 @@ urlpatterns = [
     ##accounts app
     path('login/', login, name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('register/', register, name='register'),
+    path('register/', RegisterView.as_view(), name='register'),
     path('guest/', guest_register, name='guest_register'),
 
     ##carts app

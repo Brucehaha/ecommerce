@@ -48,6 +48,13 @@ class RegisterForm(forms.ModelForm):
 		if password1 and password2 and password1 != password2:
 			raise forms.ValidationError("Passwords don't match")
 		return password2
+	def save(self, commit=True):
+		user = super(RegisterForm, self).save(commit=False)
+		user.set_password(self.cleaned_data["password"])
+		#user.active = False #send comfirmation email
+		if commit:
+			user.save()
+		return user
 
 
 class UserAdminCreationForm(forms.ModelForm):
@@ -73,6 +80,7 @@ class UserAdminCreationForm(forms.ModelForm):
 		# Save the provided password in hashed format
 		user = super(UserAdminCreationForm, self).save(commit=False)
 		user.set_password(self.cleaned_data["password1"])
+
 		if commit:
 			user.save()
 		return user
@@ -136,14 +144,14 @@ class LoginForm(forms.Form):
 # 			 	}
 # 			)
 # 		)
-# 	email    = forms.EmailField(
-# 		widget=forms.EmailInput(
-# 			attrs={
-# 				"class": "form-control",
-# 			 	"placeholder": "email"
-# 			 	}
-# 			)
-# 		)
+	# email    = forms.EmailField(
+	# 	widget=forms.EmailInput(
+	# 		attrs={
+	# 			"class": "form-control",
+	# 		 	"placeholder": "email"
+	# 		 	}
+	# 		)
+	# 	)
 # 	password = forms.CharField(
 # 		widget=forms.PasswordInput(
 # 			attrs={

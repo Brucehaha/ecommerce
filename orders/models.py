@@ -20,8 +20,8 @@ ORDER_STATUS_CHOICES=(
 class OrderManager(models.Manager):
 	def new_or_get(self, billing_profile, cart_obj):
 		'forbiden create new order with same cart repeately'
-		qs = self.get_queryset().filter(cart=cart_obj, 
-										billing_profile=billing_profile, 
+		qs = self.get_queryset().filter(cart=cart_obj,
+										billing_profile=billing_profile,
 										active=True,
 										status='created')
 		if qs.count()==1:
@@ -30,14 +30,14 @@ class OrderManager(models.Manager):
 		else:
 			# get rid of the olde order and create the new order --->the following code has been moved to the order manager
 			# older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
-			# if older_order_qs.exists(): 
+			# if older_order_qs.exists():
 			# 	older_order_qs.update(active=False)
 			obj = self.model.objects.create(
-						billing_profile=billing_profile, 
+						billing_profile=billing_profile,
 						cart=cart_obj)
 			new_obj = True
 		return obj, new_obj
-				
+
 
 
 
@@ -61,8 +61,8 @@ class Order(models.Model):
 		cart_total = self.cart.total
 		ship_total = self.ship_total
 		self.total = round(Decimal(cart_total)+Decimal(ship_total),2)
-		self.save() 
-	
+		self.save()
+
 	def check_done(self):
 		shipping_address = self.shipping_address
 		billing_address = self.billing_profile
