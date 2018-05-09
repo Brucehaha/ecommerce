@@ -4,7 +4,10 @@ from carts.models import Cart
 from .forms import LoginForm, RegisterForm, GuestForm
 from django.utils.http import is_safe_url
 from .models import GuestEmail
-from django.views.generic import CreateView, FormView
+from django.views.generic import (CreateView,
+								  FormView,
+									)
+
 
 def guest_register(request):
 	form = GuestForm(request.POST or None)
@@ -26,18 +29,19 @@ def guest_register(request):
 	return redirect("/register/")
 
 
-def loginView(FormView):
+class LoginView(FormView):
 	form_class = LoginForm
 	success_url = '/'
-	template_name = 'accounts/login.html'
+	template_name = 'login.html'
 
-	def form_valid(self):
+	def form_valid(self, form):
+		request = self.request
 		next_ = request.GET.get('next')
 		next_post = request.POST.get('next')
 		redirect_path = next_ or next_post or None
-		username = form.cleaned_data.get("username")
+		email = form.cleaned_data.get("email")
 		password = form.cleaned_data.get("password")
-		user = authenticate(request, username=username, password=password)
+		user = authenticate(request, email=email, password=password)
 		if user is not None:
 			auth_login(request, user)
 			## retrive the cart and cart items number
@@ -51,44 +55,47 @@ def loginView(FormView):
 				return redirect(redirect_path)
 			else:
 				return redirect("/")
-		return super(LoginView, self).form_invalid()
+		return super(LoginView, self).form_invalid(form)
 
-def login(request):
-	form = LoginForm(request.POST or None)
-	context = {
-		"form": form
-	}
 
-	next_ = request.GET.get('next')
-	next_post = request.POST.get('next')
-	redirect_path = next_ or next_post or None
-
-	if form.is_valid():
-		username = form.cleaned_data.get("username")
-		password = form.cleaned_data.get("password")
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			auth_login(request, user)
-			## retrive the cart and cart items number
-			try:
-				del request.session['guest_email_id']
-			except KeyError:
-				pass
-
-			Cart.objects.load_cart(request)
-			if is_safe_url(redirect_path, request.get_host()):
-				return redirect(redirect_path)
-			else:
-				return redirect("/")
-		else:
-			print("Error")
-	return render(request, "login.html", context)
 
 class RegisterView(CreateView):
 	form_class = RegisterForm
 	template_name = 'register.html'
 	success_url = '/login/'
-# def register(request):
+
+
+# def login(request):
+# 	form = LoginForm(request.POST or None)
+# 	context = {
+# 		"form": form
+# 	}
+#
+# 	next_ = request.GET.get('next')
+# 	next_post = request.POST.get('next')
+# 	redirect_path = next_ or next_post or None
+#
+# 	if form.is_valid():
+# 		username = form.cleaned_data.get("username")
+# 		password = form.cleaned_data.get("password")
+# 		user = authenticate(request, username=username, password=password)
+# 		if user is not None:
+# 			auth_login(request, user)
+# 			## retrive the cart and cart items number
+# 			try:
+# 				del request.session['guest_email_id']
+# 			except KeyError:
+# 				pass
+#
+# 			Cart.objects.load_cart(request)
+# 			if is_safe_url(redirect_path, request.get_host()):
+# 				return redirect(redirect_path)
+# 			else:
+# 				return redirect("/")
+# 		else:
+# 			print("Error")
+# 	return render(request, "login.html", context)
+# # def register(request):
 # 	form = RegisterForm(request.POST or None)
 # 	context = {
 # 		"form": form

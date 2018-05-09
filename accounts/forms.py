@@ -117,13 +117,13 @@ class GuestForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-	username = forms.CharField(
-		widget=forms.TextInput(
+	email    = forms.EmailField(
+		widget=forms.EmailInput(
 			attrs={
 				"class": "form-control",
-			 	"placeholder": "Username"
+			 	"placeholder": "email"
 			 	}
-			 	)
+			)
 		)
 	password = forms.CharField(
 		widget=forms.PasswordInput(
@@ -144,14 +144,14 @@ class LoginForm(forms.Form):
 # 			 	}
 # 			)
 # 		)
-	# email    = forms.EmailField(
-	# 	widget=forms.EmailInput(
-	# 		attrs={
-	# 			"class": "form-control",
-	# 		 	"placeholder": "email"
-	# 		 	}
-	# 		)
-	# 	)
+	email    = forms.EmailField(
+		widget=forms.EmailInput(
+			attrs={
+				"class": "form-control",
+			 	"placeholder": "email"
+			 	}
+			)
+		)
 # 	password = forms.CharField(
 # 		widget=forms.PasswordInput(
 # 			attrs={
