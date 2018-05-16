@@ -80,6 +80,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 AUTH_USER_MODEL = 'accounts.myUser'
+FORCE_SESSION_TO_ONE = True
+FORCE_USER_INACTIVE_END_SESSION = True
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

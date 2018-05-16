@@ -11,6 +11,10 @@ from accounts.signals import user_logged_in
 
 User = settings.AUTH_USER_MODEL
 
+
+FORCE_SESSION_TO_ONE = getattr(settings,'FORCE_SESSION_TO_ONE', False)
+FORCE_USER_INACTIVE_END_SESSION = getattr(settings,'FORCE_SESSION_TO_ONE', False)
+
 class ObjectViewed(models.Model):
     user            = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     content_type    = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
@@ -51,7 +55,7 @@ class UserSession(models.Model):
     session_key     = models.CharField(max_length=100, blank=True, null=True)
     timestamp       = models.DateTimeField(auto_now_add=True)
     active          = models.BooleanField(default=True)
-    ended          = models.BooleanField(default=True)
+    ended          = models.BooleanField(default=False)
 
     def end_session(self):
         session_key = self.session_key
@@ -64,6 +68,34 @@ class UserSession(models.Model):
         except:
             pass
         return self.ended
+
+
+## auto logout after a new login from other browser
+def post_save_session_receiver(sender, instance, created, *args, **kwargs):
+    if created:
+        qs = UserSession.objects.filter(user=instance.user).exclude(id=instance.id)
+        for i in qs:
+            i.end_session()
+    ## manage logout from admin
+    if not instance.active:
+        instance.end_session()
+if FORCE_SESSION_TO_ONE:
+    post_save.connect(post_save_session_receiver, sender=UserSession)
+
+##auto logout users afterh the user is not active
+def post_save_session_user_receiver(sender, instance, created, *args, **kwargs):
+    if not created:
+        if instance.active == False:
+            qs = UserSession.objects.filter(user=instance)
+            for i in qs:
+                i.end_session()
+
+if FORCE_USER_INACTIVE_END_SESSION:
+    post_save.connect(post_save_session_user_receiver, sender=User)
+
+
+
+
 
 def user_logged_in_receiver(sender, instance, request, *args, **kwargs):
     user = instance
