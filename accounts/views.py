@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login as auth_login
 from django.shortcuts import render, redirect
-from carts.models import Cart
-from .forms import LoginForm, RegisterForm, GuestForm
 from django.utils.http import is_safe_url
-from .models import GuestEmail
 from django.views.generic import (CreateView,
-								  FormView,
-									)
+								  FormView,)
+from .forms import LoginForm, RegisterForm, GuestForm
+from carts.models import Cart
+from .models import GuestEmail
+from .signals import user_logged_in
 
 
 def guest_register(request):
@@ -44,6 +44,7 @@ class LoginView(FormView):
 		user = authenticate(request, email=email, password=password)
 		if user is not None:
 			auth_login(request, user)
+			user_logged_in.send(user.__class__, instance=user, request=request)
 			## retrive the cart and cart items number
 			try:
 				del request.session['guest_email_id']
