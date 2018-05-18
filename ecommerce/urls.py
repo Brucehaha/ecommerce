@@ -7,9 +7,8 @@ from addresses.views import addess_create, address_choose
 from accounts.views import LoginView, RegisterView, guest_register
 from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
-from products.views import (ProductListView,
-                            ProductDetailView,
-                            )
+from products.views import ProductListView,ProductDetailView
+from billing.views import payment_method, payment_method_create
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +31,11 @@ urlpatterns = [
     path('accounts/address', addess_create, name='address'),
     path('accounts/address_choose', address_choose, name='address_choose'),
     path('api/cart/', cart_refresh, name='cart_refresh'),
+
+    path('payment_method',payment_method , name='payment_method'),
+    path('payment_method/create',payment_method_create , name='payment_method_create'),
+
+
 
 
  ]

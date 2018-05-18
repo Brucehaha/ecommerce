@@ -82,6 +82,8 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 AUTH_USER_MODEL = 'accounts.myUser'
 FORCE_SESSION_TO_ONE = True
 FORCE_USER_INACTIVE_END_SESSION = True
+STRIPE_PUBLIC_KEY = 'pk_test_G1nt8Wx2P97tG09vDwpkLQjs'
+STRIPE_PRIVATE_KEY = 'sk_test_KRibT0JWeBwggF5iksBZ6y3j'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

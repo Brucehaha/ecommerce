@@ -23,7 +23,7 @@ def guest_register(request):
 		new_guest_email = GuestEmail.objects.get_or_create(email=email)
 		request.session['guest_email_id'] = email
 		if is_safe_url(redirect_path, request.get_host()):
-				return redirect(redirect_path)
+			return redirect(redirect_path)
 		else:
 			redirect("/register/")
 	return redirect("/register/")
