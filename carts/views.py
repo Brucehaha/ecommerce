@@ -9,7 +9,13 @@ from billing.models import BillingProfile
 from accounts.models import GuestEmail
 from addresses.forms import AddressForm
 from addresses.models import Address
+from django.conf import settings
+import stripe
 
+
+STRIPE_PUBLIC_KEY = getattr(settings, 'STRIPE_PUBLIC_KEY', 'pk_test_G1nt8Wx2P97tG09vDwpkLQjs')
+STRIPE_PRIVATE_KEY = getattr(settings, 'STRIPE_PRIVATE_KEY', 'sk_test_KRibT0JWeBwggF5iksBZ6y3j')
+stripe.api_key=STRIPE_PRIVATE_KEY
 
 def cart_refresh(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
@@ -88,6 +94,7 @@ def check_out(request):
 	if request.method == "POST":
 		is_done = order_obj.check_done()
 		if is_done:
+			billing_profile.charge(order_obj)
 			order_obj.mark_paid()
 			cart_obj.cart_checkout()
 			try:
@@ -105,6 +112,7 @@ def check_out(request):
 		"guest_form" : guest_form,
 		"address_form" : address_form,
 		"address_qs" : address_qs,
+		"public_token":STRIPE_PUBLIC_KEY,
 
 	}
 	return render(request, "carts/checkout.html", context)

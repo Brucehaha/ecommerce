@@ -22,9 +22,9 @@ def upload_image_path(instance, filename):
 	name, ext = get_filename_ext(filename)
 	foldername = date.today().strftime('%Y%b%d')
 	full_filename = 'products/{foldername}/{name}_{file_rand}.{ext}'.format(
-		foldername=foldername, 
-		name=name, 
-		file_rand=file_rand, 
+		foldername=foldername,
+		name=name,
+		file_rand=file_rand,
 		ext=ext
 		)
 
@@ -43,11 +43,11 @@ class ProductQuerySet(models.query.QuerySet):
 		Q(description__icontains=query) |
 		Q(description__icontains=query) |
 		Q(tag__title__icontains=query) |
-		Q(tag__slug__icontains=query) 
+		Q(tag__slug__icontains=query)
 		)
 		return self.filter(lookups).distinct()
 
-		
+
 class ProductManager(models.Manager):
 	def get_queryset(self):
 		return ProductQuerySet(self.model, using=self._db)
@@ -56,7 +56,7 @@ class ProductManager(models.Manager):
 		return self.get_queryset().active()
 
 	def featured(self):#for Product.objects.featured
-		return self.get_queryset() .filter(featured=True)
+		return self.get_queryset().filter(featured=True)
 
 	def get_by_id(self, id):
 		qs = self.get_queryset().filter(id=id)
@@ -67,7 +67,7 @@ class ProductManager(models.Manager):
 	def search(self, query):
 		# lookups = Q(title__icontains=query) | Q(description__icontains=query)
 		return self.get_queryset().active().search(query)#defined in last model
- 
+
 
 
 
@@ -80,7 +80,7 @@ class Product(models.Model):
 	 								  default=59
 	 								 )
 	image       = models.ImageField(upload_to=upload_image_path,
-									null=True, 
+									null=True,
 									blank=True
 									)
 	featured	= models.BooleanField(default=False)
@@ -95,7 +95,7 @@ class Product(models.Model):
 
 	def __str__(self):
 		return self.title
-		
+
 	def __unicode__(self):
 		return self.title
 

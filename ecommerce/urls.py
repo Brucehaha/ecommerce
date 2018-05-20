@@ -32,8 +32,8 @@ urlpatterns = [
     path('accounts/address_choose', address_choose, name='address_choose'),
     path('api/cart/', cart_refresh, name='cart_refresh'),
 
-    path('payment_method',payment_method , name='payment_method'),
-    path('payment_method/create',payment_method_create , name='payment_method_create'),
+    path('payment-method/',payment_method, name='payment_method'),
+    path('payment-method/create/',payment_method_create, name='payment_method_create'),
 
 
 

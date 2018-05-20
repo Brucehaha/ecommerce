@@ -14,7 +14,7 @@
 	 	{% include 'snippets/login_form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register %}
 
  	</div>
-</div> 
+</div>
 {% else %}
 	{% if not order_obj.shipping_address %}
 		<div class="row">
@@ -42,26 +42,31 @@
 	 		</div>
 	 	</div>
 
- 	{% else %}
-		<div class="row">
-			<div class="col-12">
-				<h1>Checkout</h1>
-			</div>
-		<div class="col-12">
-			<p>Total {{ order_obj.cart.total }}</p>
-			<p>Shipping Address {{ order_obj.shipping_address.get_address }}</p>
-			<p>Shipping Cost {{ order_obj.ship_total }}</p>
-			<p>Subtotal {{ order_obj.total }}</p>
-			
-			<form method="POST", action="">
-				{% csrf_token %}
-			<button type="submit" class="btn btn-default">Checkout</button>
-			</form>
 
-		</div>
-		{% endif %}
+
+ 	{% else %}
+				{% if not billing_profile.has_card %}
+					{% include 'billing/card.html' with public_token=public_token next_url=request.build_absolute_uri %}
+				{% else %}
+					<div class="row">
+						<div class="col-12">
+							<h1>Checkout</h1>
+						</div>
+					<div class="col-12">
+						<p>Total {{ order_obj.cart.total }}</p>
+						<p>Shipping Address {{ order_obj.shipping_address.get_address }}</p>
+						<p>Shipping Cost {{ order_obj.ship_total }}</p>
+						<p>Subtotal {{ order_obj.total }}</p>
+
+						<form method="POST", action="">
+							{% csrf_token %}
+						<button type="submit" class="btn btn-default">Checkout</button>
+						</form>
+					</div>
+				{% endif %}
+	{% endif %}
 
 {% endif %}
 
 
-{% endblock %} 
+{% endblock %}
