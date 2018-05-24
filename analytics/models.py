@@ -12,6 +12,7 @@ from accounts.signals import user_logged_in
 User = settings.AUTH_USER_MODEL
 
 
+
 FORCE_SESSION_TO_ONE = getattr(settings,'FORCE_SESSION_TO_ONE', False)
 FORCE_USER_INACTIVE_END_SESSION = getattr(settings,'FORCE_SESSION_TO_ONE', False)
 
@@ -33,14 +34,18 @@ class ObjectViewed(models.Model):
 
 
 def object_viewed_receiver(sender, instance, request, *args, **kwargs):
+
     c_type = ContentType.objects.get_for_model(sender)
     ip_address = None
+    user = request.user
+    if request.user.id == None:
+        user = None
     try:
         ip_address = get_client_ip(request)
     except:
         pass
     new_view_instance = ObjectViewed.objects.create(
-                user=request.user,
+                user=user,
                 content_type=c_type,
                 object_id=instance.id,
                 ip_address=ip_address

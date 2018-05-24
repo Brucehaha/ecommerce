@@ -52,7 +52,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class MyUser(AbstractBaseUser):
+class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -109,7 +109,7 @@ def user_pre_save_receiver(sender, instance, *args, **kwargs):
 	if not instance.username:
 		instance.username = instance.get_short_name()
 
-pre_save.connect(user_pre_save_receiver, sender=MyUser)
+pre_save.connect(user_pre_save_receiver, sender=User)
 
 
 

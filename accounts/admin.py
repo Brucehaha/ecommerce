@@ -1,11 +1,12 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
 from .forms import UserAdminChangeForm, UserAdminCreationForm
 from .models import GuestEmail
 from django.contrib.auth.admin import UserAdmin
-from .models import MyUser as User
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 
+
+User = get_user_model()
 
 class MyUserAdmin(UserAdmin):
     search_fields = ['email']

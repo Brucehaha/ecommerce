@@ -59,6 +59,11 @@ class BillingProfile(models.Model):
 	def get_cards(self):
 		return self.card_set.all()
 
+	def deactivate_card(self):
+		cards = self.get_cards()
+		cards.update(active=False)
+		return cards.filter(active=True).count()
+
 	@property
 	def has_card(self):
 		card_qs = self.get_cards()
@@ -105,6 +110,10 @@ class CardManager(models.Manager):
 			obj.save()
 		return obj
 
+	def all(self):
+		return self.get_queryset().filter(active=True)
+
+
 class Card(models.Model):
 	billing 		= models.ForeignKey(BillingProfile,on_delete=models.CASCADE, null=True, blank=True)
 	card_id			= models.CharField(max_length=120, blank=True, null=True)
@@ -117,6 +126,8 @@ class Card(models.Model):
 	exp_year 		= models.IntegerField(blank=True, null=True)
 	source			= models.CharField(max_length=120, blank=True, null=True)
 	default			= models.BooleanField(default=True)
+	active			= models.BooleanField(default=True)
+	timestamps 		= models.DateTimeField(auto_now_add=True)
 
 	objects = CardManager()
 
