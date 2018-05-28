@@ -5,7 +5,6 @@ var stripeFormModule = $(".stripe-payment-form")
 var stripeTemplate = $.templates("#stripeTemplate")
 var stripeFormToken = stripeFormModule.attr('public_token')
 var stripeFormNextUrl = stripeFormModule.attr('next_url')
-
 var stripeTemplateDataContext= {
   public_token:stripeFormToken,
   next_url:stripeFormNextUrl
@@ -27,6 +26,7 @@ var stripe = Stripe(public_token);
 
 // Create an instance of Elements.
 var elements = stripe.elements();
+console.log(next_url)
 
 // Custom styling can be passed to options when creating an Element.
 // (Note that this demo uses a wider set of styles than the guide below.)
@@ -76,7 +76,7 @@ form.addEventListener('submit', function(event) {
       errorElement.textContent = result.error.message;
     } else {
       // Send the token to your server.
-      stripeTokenHandler(result.token);
+      stripeTokenHandler(next_url, result.token);
 
 
     }
@@ -93,12 +93,11 @@ function endSubmit(){
   paymentFormBtn.text('Submit')
 }
 
-function stripeTokenHandler(token){
+function stripeTokenHandler(next_url, token){
   var paymentMethodEndpoint ='/payment-method/create/';
   //pass token id, next_url(get from template absolute_uri) to billing views
   var data = {
     "token":token.id,
-    "next_URL":next_url,
   };
   $.ajax({
     data:data,
@@ -115,12 +114,13 @@ function stripeTokenHandler(token){
         theme: "modern",
       });
       card.clear
-      if(data.nextURL){
-        window.location.href=data.nextURL;
-
-      } else {
-          window.location.reload()
-      }
+      console.log(next_url)
+      // if(next_url){
+      //   window.location.href=next_url;
+      //
+      // } else {
+      //     window.location.reload()
+      // }
 
     },
     error:function(xhr,status,error){
@@ -134,7 +134,7 @@ function stripeTokenHandler(token){
         theme: "modern",
         buttons: {
           confirm: function () {
-             window.location.href='/login/';
+             window.location.href='/cart';
          }
        },
      });

@@ -1,6 +1,13 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<!-- use JS render to reuse the payment form, therefore, stripe payment can be
+not only used in card.html as a single page, but stripe payment can be used in any
+pages of this project
+e.g if not using JS render, checkout.html will need card.html to be inserted, however
+card.html is a full page with header, menu, so we need to build another card.html without
+extends 'base.html'.
+in this case i shouldkeep card.html as full page for adding more cards. -->
 <div class='col-10 col-md-6 mx-auto my-2'>
 <div class="stripe-payment-form" public_token="{{ public_token }}" next_url="{{ next_url }}"></div>
 </div>

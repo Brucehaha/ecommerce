@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.conf import settings
 from django.db.models.signals import pre_save, post_save, m2m_changed
 from django.utils import timezone
@@ -64,15 +65,18 @@ class BillingProfile(models.Model):
 		cards.update(active=False)
 		return cards.filter(active=True).count()
 
+	def get_payment_method_url(self):\
+		return reverse('payment_method')
+
 	@property
 	def has_card(self):
 		card_qs = self.get_cards()
 		return card_qs.exists()
 	@property
 	def default_cards(self):
-		default_cards= self.get_cards().filter(default=True)
+		default_cards= self.get_cards().filter(default=True, active=True)
 		if default_cards.exists():
-			return default_cards.first()
+			return default_cards.last()
 		return None
 
 def pre_save_user(sender, instance, *args, **kwargs):

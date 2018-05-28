@@ -45,17 +45,28 @@
 
  	{% else %}
 				{% if not billing_profile.has_card %}
-					{% include 'billing/card.html' with public_token=public_token next_url=request.build_absolute_uri %}
+				<div class='col-10 col-md-6 mx-auto my-2'>
+					<!-- jsrender recycle the stripe form therefore one form can be used in
+				initialize the new cards in checkout.html , or change a card in card.html by payment-method view  -->
+					<!-- pass  next_url to div attr, then js get the attr value N assign
+					it form next_url, finally next url is passed to success method of ajax, to load to finall address-->
+				<div class="stripe-payment-form" public_token="{{ public_token }}" next_url="{{ request.build_absolute_uri }}"></div>
+				</div>
+
 				{% else %}
 					<div class="row">
 						<div class="col-12">
 							<h1>Checkout</h1>
 						</div>
 					<div class="col-12">
-						<p>Total {{ order_obj.cart.total }}</p>
-						<p>Shipping Address {{ order_obj.shipping_address.get_address }}</p>
-						<p>Shipping Cost {{ order_obj.ship_total }}</p>
-						<p>Subtotal {{ order_obj.total }}</p>
+						<p>Total: {{ order_obj.cart.total }}</p>
+						<p>Shipping Address: {{ order_obj.shipping_address.get_address }}</p>
+						<p>Shipping Cost: {{ order_obj.ship_total }}</p>
+						<p>Subtotal: {{ order_obj.total }}</p>
+						<!-- reuse the payment-method view, and payment method view will get the next url and resend
+					it by get method back to div next_url then pass it to form next_url then, js get it and pass it
+				to windows.location in AJAX-->
+						<p>Payment Method: {{ billing_profile.default_cards }}(<a href="{{ billing_profile.get_payment_method_url }}?next={{ request.build_absolute_uri }}">Change</a>)</p>
 
 						<form method="POST", action="">
 							{% csrf_token %}
