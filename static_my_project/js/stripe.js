@@ -1,3 +1,20 @@
+$( document ).ready(function() {
+
+
+var stripeFormModule = $(".stripe-payment-form")
+var stripeTemplate = $.templates("#stripeTemplate")
+var stripeFormToken = stripeFormModule.attr('public_token')
+var stripeFormNextUrl = stripeFormModule.attr('next_url')
+
+var stripeTemplateDataContext= {
+  public_token:stripeFormToken,
+  next_url:stripeFormNextUrl
+}
+var stripeTemplateHtml = stripeTemplate.render(stripeTemplateDataContext)
+stripeFormModule.html(stripeTemplateHtml)
+
+
+
 // Create a Stripe client.
 const paymentForm = $(".payment-form")
 const paymentFormBtn = paymentForm.find("button")
@@ -66,6 +83,7 @@ form.addEventListener('submit', function(event) {
   });
 });
 
+
 function DoSubmit(){
   paymentFormBtn.addClass("disabled")
   paymentFormBtn.html('<i  class="fa fa-spinner fa-spin"></i>sending...')
@@ -77,6 +95,7 @@ function endSubmit(){
 
 function stripeTokenHandler(token){
   var paymentMethodEndpoint ='/payment-method/create/';
+  //pass token id, next_url(get from template absolute_uri) to billing views
   var data = {
     "token":token.id,
     "next_URL":next_url,
@@ -95,26 +114,32 @@ function stripeTokenHandler(token){
         content:data.message,
         theme: "modern",
       });
-      card.clear();
+      card.clear
       if(data.nextURL){
         window.location.href=data.nextURL;
 
+      } else {
+          window.location.reload()
       }
 
     },
     error:function(xhr,status,error){
-      // console.log(xhr);
-      // console.log(status);
-      // console.log(error);
+      console.log(xhr);
+      console.log(+status);
+      console.log(error);
       // // xhr,status,error
-      $.alert({
+      $.confirm({
         title:"error "+xhr.status,
-        content:error +": "+ xhr.responseJSON,
+        content:"error: "+ xhr.responseJSON.message,
         theme: "modern",
-      });
-      setTimeout(function(){
-        window.location.href='/';
-      }, 2000);
+        buttons: {
+          confirm: function () {
+             window.location.href='/login/';
+         }
+       },
+     });
+
     },
 });
 }
+})

@@ -1,17 +1,9 @@
+{% extends 'base.html'%}
+
+{% block content %}
 <div class='col-10 col-md-6 mx-auto my-2'>
-<form action="/charge" method="post" id="payment-form" class="payment-form" public_token="{{ public_token }}" next_url="{{ next_url }}">
-  <div class="form-row">
-    <label for="card-element">
-      Credit or debit card
-    </label>
-    <div id="card-element"  class="form-control my-2">
-      <!-- A Stripe Element will be inserted here. -->
-    </div>
-
-    <!-- Used to display form errors. -->
-    <div id="card-errors" role="alert"></div>
-  </div>
-
-  <button class='btn btn-success'>Submit Payment</button>
-</form>
+<div class="stripe-payment-form" public_token="{{ public_token }}" next_url="{{ next_url }}"></div>
 </div>
+
+
+{% endblock %}

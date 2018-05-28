@@ -21,9 +21,7 @@ def payment_method_create(request):
 
         billing_obj, created = BillingProfile.objects.new_or_get(request)
         if not billing_obj:
-            return HttpResponse(json.dumps({'message': "Please register or login"}),
-                                content_type='application/json',
-                                status=401)
+            return JsonResponse({'message': "Please register or login"}, status=401)
         elif token:
             customer = stripe.Customer.retrieve(billing_obj.customer_id)
             card_info = customer.sources.create(source=token)
