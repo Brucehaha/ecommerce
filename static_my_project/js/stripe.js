@@ -13,11 +13,11 @@ var stripeTemplateHtml = stripeTemplate.render(stripeTemplateDataContext)
 stripeFormModule.html(stripeTemplateHtml)
 
 
-
 // Create a Stripe client.
 const paymentForm = $(".payment-form")
 const paymentFormBtn = paymentForm.find("button")
 const next_url = paymentForm.attr("next_url")
+console.log("3: "+next_url)
 
 const public_token = paymentForm.attr("public_token");
 // A $( document ).ready() block.
@@ -108,19 +108,32 @@ function stripeTokenHandler(next_url, token){
       setTimeout(function(){
         endSubmit();
       }, 1000);
+
+      $.confirm({
+        title:"Success",
+        content:data.message,
+        theme: "modern",
+        buttons: {
+          ok: function () {
+             window.location.href='/cart';
+         }
+       },
+     });
+
+
       $.alert({
         title:"Success",
         content:data.message,
         theme: "modern",
       });
       card.clear
-      console.log(next_url)
-      // if(next_url){
-      //   window.location.href=next_url;
-      //
-      // } else {
-      //     window.location.reload()
-      // }
+      console.log("4 : "+next_url)
+      if(next_url){
+        window.location.href=next_url;
+
+      } else {
+          window.location.reload()
+      }
 
     },
     error:function(xhr,status,error){
@@ -133,7 +146,7 @@ function stripeTokenHandler(next_url, token){
         content:"error: "+ xhr.responseJSON.message,
         theme: "modern",
         buttons: {
-          confirm: function () {
+          ok: function () {
              window.location.href='/cart';
          }
        },

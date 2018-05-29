@@ -25,7 +25,7 @@ $(document).ready(function(){
       url: contactFormEndpoint,
       data: contactFormData,
       success: function(data){
-        console.log(contactForm)
+        // console.log(contactForm)
         setTimeout(function(){
           endSubmit()
         }, 2000)
@@ -39,7 +39,7 @@ $(document).ready(function(){
         contactForm[0].reset()
       },
       error: function(error){
-        console.log(error.responseJSON)
+        // console.log(error.responseJSON)
          endSubmit()
         var msg="";
         var jsonError = error.responseJSON;
@@ -94,7 +94,7 @@ $(document).ready(function(){
     var actionEndpoint = thisForm.attr("data-endpoint"); //api endpoint
     var httpMethod = thisForm.attr("method");
     var formData = thisForm.serialize();
-    console.log(formData)
+    // console.log(formData)
 
 
     $.ajax({
@@ -102,8 +102,8 @@ $(document).ready(function(){
       method:httpMethod,
       data: formData,
       success: function(newdata){
-        console.log("Added", newdata.added);
-        console.log("Removed", newdata.removed);
+        // console.log("Added", newdata.added);
+        // console.log("Removed", newdata.removed);
         var submitSpan = thisForm.find(".submit-span");
         if (newdata.added){
           submitSpan.html('In Cart<button class="btn btn-link" type="submit">remove?</button>');
@@ -118,8 +118,8 @@ $(document).ready(function(){
       },
       error: function(errorData){
         alert("An Error Occured")
-        console.log("error")
-        console.log(errorData)
+        // console.log("error")
+        // console.log(errorData)
       },
     })
   })
@@ -161,8 +161,8 @@ $(document).ready(function(){
 
        error: function(errorData){
         alert("An Error Occured")
-        console.log("error")
-        console.log(errorData)
+        // console.log("error")
+        // console.log(errorData)
       },
      })
     }

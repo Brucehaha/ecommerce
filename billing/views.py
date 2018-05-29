@@ -14,12 +14,15 @@ def payment_method(request):
     billing_obj, created = BillingProfile.objects.new_or_get(request)
     if not billing_obj:
         return redirect("/cart")
+    next_url=None
     next_= request.GET.get("next")
-
-    next_URL=None
     if is_safe_url(next_, request.get_host()):
-        next_URL = next_
-    return render(request, 'billing/card.html', {"public_token": STRIPE_PUBLIC_KEY, "next_URL":next_URL})
+        next_url = next_
+    context={
+        "public_token": STRIPE_PUBLIC_KEY,
+        "next_url": next_url,
+        }
+    return render(request, 'billing/card.html', context)
 
 
 def payment_method_create(request):

@@ -139,6 +139,15 @@ class Card(models.Model):
 		return "{} {}".format(self.brand,self.last4)
 
 
+def post_save_card(sender, instance, created, *args, **kwargs):
+	if created:
+		qs = Card.objects.filter(billing=instance.billing).exclude(id=instance.id)
+		qs.update(default=False)
+
+post_save.connect(post_save_card, sender=Card)
+
+
+
 class ChargeManager(models.Manager):
 	def do(self, billing, order_obj, card=None):
 		card_obj = card
