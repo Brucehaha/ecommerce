@@ -24,7 +24,6 @@ def payment_method(request):
         }
     return render(request, 'billing/card.html', context)
 
-
 def payment_method_create(request):
     if request.method == "POST" and request.is_ajax():
         token = request.POST.get('token')

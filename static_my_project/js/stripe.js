@@ -54,8 +54,8 @@ var card = elements.create('card', {style: style});
 card.mount('#card-element');
 
 // Handle real-time validation errors from the card Element.
-card.addEventListener('change', function(event) {
-  var displayError = document.getElementById('card-errors');
+card.on('change', function(event) {
+  var displayError = $('#card-errors');
   if (event.error) {
     displayError.textContent = event.error.message;
   } else {
@@ -63,25 +63,64 @@ card.addEventListener('change', function(event) {
   }
 });
 
+// card.addEventListener('change', function(event) {
+//   var displayError = document.getElementById('card-errors');
+//   if (event.error) {
+//     displayError.textContent = event.error.message;
+//   } else {
+//     displayError.textContent = '';
+//   }
+// });
+
 // Handle form submission.
-var form = document.getElementById('payment-form');
-form.addEventListener('submit', function(event) {
+// var form = document.getElementById('payment-form');
+// form.addEventListener('submit', function(event) {
+//   event.preventDefault();
+//
+//
+//   stripe.createToken(card).then(function(result) {
+//     if (result.error) {
+//       // Inform the user if there was an error.
+//       var errorElement = document.getElementById('card-errors');
+//       errorElement.textContent = result.error.message;
+//     } else {
+//       // Send the token to your server.
+//         DoSubmit();
+//       stripeTokenHandler(next_url, result.token);
+//
+//
+//     }
+//   });
+// });
+
+
+//change js to jquery
+var form = $('#payment-form');
+var btn = form.find("button")
+form.on('submit', function(event) {
   event.preventDefault();
-  DoSubmit();
+
 
   stripe.createToken(card).then(function(result) {
     if (result.error) {
       // Inform the user if there was an error.
-      var errorElement = document.getElementById('card-errors');
+      var errorElement = $('#card-errors');
+      btn.blur()
+      btn.removeClass("btn-success")
+      btn.addClass("btn-warning")
+      btn.html("Resubmit")
       errorElement.textContent = result.error.message;
     } else {
       // Send the token to your server.
+      //get rid of focus of the button so the border frame is removed.
+      btn.blur()
+      DoSubmit();
       stripeTokenHandler(next_url, result.token);
 
 
     }
   });
-});
+})
 
 
 function DoSubmit(){
@@ -91,6 +130,12 @@ function DoSubmit(){
 function endSubmit(){
   paymentFormBtn.removeClass("disabled")
   paymentFormBtn.text('Submit')
+}
+function redirectToUrl(next_url, time){
+  window.location.href=next_url;
+  setTimeout(function(){
+    window.location.href=next_url;
+  }, time);
 }
 
 function stripeTokenHandler(next_url, token){
@@ -104,46 +149,33 @@ function stripeTokenHandler(next_url, token){
     url:paymentMethodEndpoint,
     method:"POST",
     success:function(data){
-
-      setTimeout(function(){
-        endSubmit();
-      }, 1000);
-
-      $.confirm({
-        title:"Success",
-        content:data.message,
-        theme: "modern",
-        buttons: {
-          ok: function () {
-             window.location.href='/cart';
-         }
-       },
-     });
-
-
-      $.alert({
-        title:"Success",
-        content:data.message,
-        theme: "modern",
-      });
-      card.clear
-      console.log("4 : "+next_url)
+      var msg = data.message || "Please try again";
       if(next_url){
-        window.location.href=next_url;
+        alert(msg);
+        $.confirm({
+          title:"An error Occured",
+          content:msg2,
+          theme: "modern",
+          buttons: {
+            redirectToUrl(next_url,1000);
+            setTimeout(function(){
+              endSubmit();
+              card.clear;
+            }, 1000);
+           }
+         },
+       });
 
       } else {
           window.location.reload()
       }
 
     },
-    error:function(xhr,status,error){
-      console.log(xhr);
-      console.log(+status);
-      console.log(error);
-      // // xhr,status,error
+    error:function(error){
+    var msg2= error.message || "Please try again";
       $.confirm({
-        title:"error "+xhr.status,
-        content:"error: "+ xhr.responseJSON.message,
+        title:"An error Occured",
+        content:msg2,
         theme: "modern",
         buttons: {
           ok: function () {
