@@ -19,7 +19,7 @@ def check_email(email):
 
 
 #STATUS = ["subscribed", "unsubscribed", "cleaned", "pending"]
-class Mailchimp():
+class MailchimpHandler():
 	def __init__(self):
 		self.endpoints = ENDPONITS
 		self.api_key = MAILCHIMP_API

@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from django.shortcuts import redirect
 from django.conf import settings
-from django.http import HttpResponse, JsonResponse
-from .models import BillingProfile, Card
+from django.http import JsonResponse
+from django.http import HttpResponse
+from .models import Card
+from .models import BillingProfile
 from django.utils.http import is_safe_url
 import json
 
