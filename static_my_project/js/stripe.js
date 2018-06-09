@@ -131,12 +131,7 @@ function endSubmit(){
   paymentFormBtn.removeClass("disabled")
   paymentFormBtn.text('Submit')
 }
-function redirectToUrl(next_url, time){
-  window.location.href=next_url;
-  setTimeout(function(){
-    window.location.href=next_url;
-  }, time);
-}
+
 
 function stripeTokenHandler(next_url, token){
   var paymentMethodEndpoint ='/payment-method/create/';
@@ -157,7 +152,9 @@ function stripeTokenHandler(next_url, token){
           content:msg2,
           theme: "modern",
           buttons: {
-            redirectToUrl(next_url,1000);
+            setTimeout(function(){
+              window.location.href=next_url;
+            }, 1000);
             setTimeout(function(){
               endSubmit();
               card.clear;

@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'search',
     'tags',
     'orders',
-    'mailchimp',
+    'marketing',
 ]
 
 MIDDLEWARE = [
