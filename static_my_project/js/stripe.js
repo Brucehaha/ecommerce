@@ -131,7 +131,13 @@ function endSubmit(){
   paymentFormBtn.removeClass("disabled")
   paymentFormBtn.text('Submit')
 }
-
+function redirectToNext(nextPath, timeoffset) {
+    // body...
+    if (nextPath){
+    setTimeout(function(){
+                window.location.href = nextPath
+            }, timeoffset)
+    }
 
 function stripeTokenHandler(next_url, token){
   var paymentMethodEndpoint ='/payment-method/create/';
@@ -147,21 +153,24 @@ function stripeTokenHandler(next_url, token){
       var msg = data.message || "Please try again";
       if(next_url){
         alert(msg);
-        $.confirm({
-          title:"An error Occured",
-          content:msg2,
-          theme: "modern",
-          buttons: {
-            setTimeout(function(){
-              window.location.href=next_url;
-            }, 1000);
-            setTimeout(function(){
-              endSubmit();
-              card.clear;
-            }, 1000);
-           }
-         },
-       });
+        redirectToNext(nextUrl, 1500)
+        setTimeout(function(){
+          endSubmit();
+          card.clear;
+        }, 1000);
+       //  $.confirm({
+       //    title:"An error Occured",
+       //    content:msg2,
+       //    theme: "modern",
+       //    buttons: {
+       //      redirectToNext(nextUrl, 1500)
+       //      setTimeout(function(){
+       //        endSubmit();
+       //        card.clear;
+       //      }, 1000);
+       //     }
+       //   }),
+       // });
 
       } else {
           window.location.reload()
