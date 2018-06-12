@@ -38,7 +38,7 @@ urlpatterns = [
 
     ##marketing
     path('subscribe/',subscribe, name='subscribe'),
-    path('subscription/',MarketingPreferenceView, name='subscription'),
+    path('subscription/',MarketingPreferenceView.as_view(), name='subscription'),
 
 
 

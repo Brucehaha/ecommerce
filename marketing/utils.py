@@ -5,7 +5,7 @@ import re
 
 
 ENDPONITS = "https://us15.api.mailchimp.com/3.0/lists/a0006a84d5/members"
-MAILCHIMP_API = "23d1f136c6c659e8a7dc89b2206ba84d-us15"
+MAILCHIMP_API = "f8875649b6b52c2c2e42e97448a4a216-us15"
 
 
 def get_hash_email(email):

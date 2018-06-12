@@ -25,7 +25,7 @@ def subscribe(request):
             print(mailchimp_obj)
             if form.is_valid():
                 form.save()
-                return rediret('/')
+                return redirect('/')
         else:
             form = MailchimpForm(instance = mailchimp_obj)
         return render(request, 'marketing/subscription.html', {"form":form})
@@ -34,22 +34,30 @@ def subscribe(request):
 class MarketingPreferenceView(SuccessMessageMixin, UpdateView):
     form_class = MailchimpForm
     template_name = 'marketing/subscription.html'
-    success_url ='/'
-    suscess_message = "Thank you for updating your  %(calculated_field)s"
-
+    success_url ='/subscription/'
+    success_message = "{calculated_field}" # replace the method by % below
+    # success_message = "%(calculated_field)" #
 
     def dispatch(self, *args, **kwargs):
         user = self.request.user
-        if user.is_authenticated:
+        if not user.is_authenticated:
             return redirect('/login/?next=/subscription/')
         return super(MarketingPreferenceView, self).dispatch(*args, **kwargs)
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(
-            cleaned_data,
-            calculated_field=self.object.subscribed,
-        )
-    def get_context_data(self):
+        sub_status = cleaned_data['subscribed']
+        msg = "Thank you for updating your email preference!"
+        if sub_status:
+            msg = "Thank you for opt-in"
+        else:
+            msg = "We will miss you so much!"
+        print(cleaned_data)
+        # return self.success_message % dict(
+        #     cleaned_data,
+        #     calculated_field=msg,
+        # )
+        return self.success_message.format(calculated_field=msg)# replace the method by % above
+    def get_context_data(self, *args, **kwargs):
         context = super(MarketingPreferenceView, self).get_context_data(*args, **kwargs)
         context['title'] = 'Update Email opt-in'
         return context

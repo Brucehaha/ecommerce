@@ -17,7 +17,6 @@ stripeFormModule.html(stripeTemplateHtml)
 const paymentForm = $(".payment-form")
 const paymentFormBtn = paymentForm.find("button")
 const next_url = paymentForm.attr("next_url")
-console.log("3: "+next_url)
 
 const public_token = paymentForm.attr("public_token");
 // A $( document ).ready() block.
@@ -138,7 +137,7 @@ function redirectToNext(nextPath, timeoffset) {
                 window.location.href = nextPath
             }, timeoffset)
     }
-
+}
 function stripeTokenHandler(next_url, token){
   var paymentMethodEndpoint ='/payment-method/create/';
   //pass token id, next_url(get from template absolute_uri) to billing views
@@ -152,8 +151,8 @@ function stripeTokenHandler(next_url, token){
     success:function(data){
       var msg = data.message || "Please try again";
       if(next_url){
-        alert(msg);
-        redirectToNext(nextUrl, 1500)
+        $.alert(msg);
+        redirectToNext(next_url, 1500)
         setTimeout(function(){
           endSubmit();
           card.clear;
@@ -189,8 +188,9 @@ function stripeTokenHandler(next_url, token){
          }
        },
      });
-
     },
+
 });
 }
+
 })
