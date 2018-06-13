@@ -83,8 +83,13 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 AUTH_USER_MODEL = 'accounts.User'
 FORCE_SESSION_TO_ONE = True
 FORCE_USER_INACTIVE_END_SESSION = True
+#stripe
 STRIPE_PUBLIC_KEY = 'pk_test_G1nt8Wx2P97tG09vDwpkLQjs'
 STRIPE_PRIVATE_KEY = 'sk_test_KRibT0JWeBwggF5iksBZ6y3j'
+#mailchimp
+MAILCHIMP_API = "3f1c98d350438c532ab3442e09de4c3d-us17"
+MAILCHIMP_LIST_ID = "fbe3f0b349"
+MAILCHIMP_DC = 'us17'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

@@ -66,3 +66,29 @@ class MarketingPreferenceView(SuccessMessageMixin, UpdateView):
         user = self.request.user
         mailchimp_obj, created = Mailchimp.objects.get_or_create(user=user)
         return mailchimp_obj
+
+
+
+"""
+POST METHOD
+data[merges][LNAME]:
+data[merges][EMAIL]: tech@goldenfield.com.au
+data[ip_opt]: 203.220.34.84
+data[email]: tech@goldenfield.com.au
+data[action]: unsub
+fired_at: 2018-06-13 03:58:54
+data[id]: 71e7c68a8e
+data[reason]: manual
+data[list_id]: fbe3f0b349
+type: unsubscribe
+data[email_type]: html
+data[web_id]: 42521203
+data[merges][FNAME]: Tech
+"""
+
+def mailcimp_webhook_view(request):
+    data = request.POST
+    list_id = data.get('data[list_id]')
+    email = data.get('data[email]')
+    type = data.get('type')
+    return

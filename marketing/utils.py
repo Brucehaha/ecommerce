@@ -1,11 +1,13 @@
+from django.conf import settings
 import requests
 import json
 import hashlib
 import re
 
 
-ENDPONITS = "https://us15.api.mailchimp.com/3.0/lists/a0006a84d5/members"
-MAILCHIMP_API = "f8875649b6b52c2c2e42e97448a4a216-us15"
+MAILCHIMP_API = getattr(settings, MAILCHIMP_API, None)
+LIST_ID = getattr(settings, MAILCHIMP_LIST_ID, None)
+DC = getattr(settings, MAILCHIMP_DC, None)
 
 
 def get_hash_email(email):
@@ -21,8 +23,13 @@ def check_email(email):
 #STATUS = ["subscribed", "unsubscribed", "cleaned", "pending"]
 class MailchimpHandler():
 	def __init__(self):
-		self.endpoints = ENDPONITS
 		self.api_key = MAILCHIMP_API
+		self.list_id = LIST_ID
+		self.dc = DC # data centre
+		self.endpoints = "https://{}.api.mailchimp.com/3.0/lists/".format(self.dc)
+
+	def get_member_endpoints(self):
+		return self.endpoints+self.list_id +"/members"
 
 	def change(self, email, status='unsubscribed'):
 		#data
@@ -31,7 +38,7 @@ class MailchimpHandler():
 		email = check_email(email)
 		email = email.encode()
 		email = get_hash_email(email)
-		endpoints= "{endpoints}/{email}".format(endpoints=self.endpoints,email=email)
+		endpoints= "{endpoints}/{email}".format(endpoints=self.get_member_endpoints(),email=email)
 		status = status
 		data = {
 			"status":status
@@ -45,14 +52,14 @@ class MailchimpHandler():
 			"email_address":email,
 			"status": "subscribed"
 		}
-		r = requests.post(self.endpoints, auth=('', self.api_key), json=data)
+		r = requests.post(self.get_member_endpoints(), auth=('', self.api_key), json=data)
 		return r.status_code, r.json()
 
 	def status_check(self, email):
 		email = check_email(email)
 		email = email.encode()
 		email = get_hash_email(email)
-		endpoints= "{endpoints}/{email}".format(endpoints=self.endpoints,email=email)
+		endpoints= "{endpoints}/{email}".format(endpoints=self.get_member_endpoints(), email=email)
 		r = requests.get(endpoints, auth=('', self.api_key))
 		return r.status_code, r.json()
 
