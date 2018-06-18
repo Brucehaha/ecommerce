@@ -5,9 +5,9 @@ import hashlib
 import re
 
 
-MAILCHIMP_API = getattr(settings, MAILCHIMP_API, None)
-LIST_ID = getattr(settings, MAILCHIMP_LIST_ID, None)
-DC = getattr(settings, MAILCHIMP_DC, None)
+MAILCHIMP_API = getattr(settings, 'MAILCHIMP_API', None)
+LIST_ID = getattr(settings, 'MAILCHIMP_LIST_ID', None)
+DC = getattr(settings, 'MAILCHIMP_DC', None)
 
 
 def get_hash_email(email):

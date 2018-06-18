@@ -9,7 +9,7 @@ from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
 from products.views import ProductListView,ProductDetailView
 from billing.views import payment_method, payment_method_create
-from marketing.views import subscribe, MarketingPreferenceView
+from marketing.views import subscribe, MarketingPreferenceView, MailchimpWebhooView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,6 +39,7 @@ urlpatterns = [
     ##marketing
     path('subscribe/',subscribe, name='subscribe'),
     path('subscription/',MarketingPreferenceView.as_view(), name='subscription'),
+    path('webhooks/email/',MailchimpWebhooView.as_view(), name='mailchimpwebhook'),
 
 
 

@@ -31,7 +31,7 @@ def pre_save_mailchimp(sender, instance, *args, **kwargs):
             response_code, response_dict = MailchimpHandler().subscribe(instance.user.email)
         else:
             response_code, response_dict = MailchimpHandler().unsubscribe(instance.user.email)
-
+        #handle form change in the admin console
         if response_dict.get("status") == "subscribed":
             instance.subscribed = True
             instance.mailchimp_subscribed = True

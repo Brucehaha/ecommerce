@@ -2,12 +2,17 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from .forms import MailchimpForm
 from .models import Mailchimp
+from .mixins import CsrfExemptMixin
+from .utils import  MailchimpHandler
 from django.conf import settings
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, View
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
+
 
 
 User = settings.AUTH_USER_MODEL
+LIST_ID = getattr(settings, 'MAILCHIMP_LIST_ID', None)
 
 
 def subscribe(request):
@@ -85,10 +90,53 @@ data[email_type]: html
 data[web_id]: 42521203
 data[merges][FNAME]: Tech
 """
+class MailchimpWebhooView(CsrfExemptMixin, View):
+    # def get(self, request, *args, **kwargs):
+    #     return HttpResponse("Thanks", status=200)
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        list_id = data.get('data[list_id]')
+        if str(list_id) == str(LIST_ID):
+            email = data.get('data[email]')
+            type = data.get('type')
+            response_code, response_data = MailchimpHandler().status_check(email)
+            sub_status = response_data['status']
+            is_subbed = None
+            mailchimp_subbed = None
+            if sub_status == "subscribed":
+                is_subbed, mailchimp_subbed == (True, True)
+            elif sub_status == "unsubscribed":
+                is_subbed, mailchimp_subbed == (False, False)
+            if is_subbed is not None and mailchimp_subbed is not None:
+                qs = Mailchimp.objects.filter(user__email__iexact=email)
+                if qs.exists():
+                    qs.update(
+                            subscribed=is_subbed,
+                            mailchimp_subscribed=mailchimp_subbed,
+                            messages=str(data)
+                            )
+        return HttpResponse("Thanks", status=200)
 
 def mailcimp_webhook_view(request):
     data = request.POST
     list_id = data.get('data[list_id]')
-    email = data.get('data[email]')
-    type = data.get('type')
-    return
+    if str(list_id) == str(LIST_ID):
+        email = data.get('data[email]')
+        type = data.get('type')
+        response_code, response_data = MailchimpHandler().status_check(email)
+        sub_status = response_data['status']
+        is_subbed = None
+        mailchimp_subbed = None
+        if sub_status == "subscribed":
+            is_subbed, mailchimp_subbed == (True, True)
+        elif sub_status == "unsubscribed":
+            is_subbed, mailchimp_subbed == (False, False)
+        if is_subbed is not None and mailchimp_subbed is not None:
+            qs = Mailchimp.objects.filter(user__email__iexact=email)
+            if qs.exists():
+                qs.update(
+                        subscribed=False,
+                        mailchimp_subscribed=False,
+                        messages=str(data)
+                        )
+    return HttpResponse("Thanks", status=200)
