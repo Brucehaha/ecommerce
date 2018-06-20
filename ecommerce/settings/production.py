@@ -154,7 +154,7 @@ MEDIA_URL = '/meida/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")
 
 
-https://kirr.co/vklau5
+# https://kirr.co/vklau5
 
 # encript ssl/tls HttpResponse
 CORS_REPLACE_HTTPS_REFERER      = False
