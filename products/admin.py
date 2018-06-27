@@ -1,5 +1,4 @@
 from django.contrib import admin
-#ll
 from .models import Product
 
 
