@@ -1,7 +1,7 @@
 #https://kirr.co/moo1b0
 .DS_STORE
 *sublime-project
-
+__pycache__/
 # Virtualenv related
 bin/
 include/
