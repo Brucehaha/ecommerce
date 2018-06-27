@@ -97,9 +97,9 @@ STRIPE_PRIVATE_KEY = os.environ.get("STRIPE_PRIVATE_KEY", "sk_test_KRibT0JWeBwgg
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django_db',
-        'USER': 'db_user',
-        'PASSWORD': '<password db_user>',
+        'NAME': os.environ.get("DBNAME"),
+        'USER': os.environ.get("DBUSER"),
+        'PASSWORD':  os.environ.get("DBPASSWD"),
         'HOST': 'localhost',
         'PORT': '',                      # Set to empty string for default.
     }
