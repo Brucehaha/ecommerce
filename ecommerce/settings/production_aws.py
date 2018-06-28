@@ -26,7 +26,7 @@ SECRET_KEY='rx)t5_oc22g7oh!^m#2-%nypkva%15x$%27!-m@xf%!^&ad8c*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.54.170.248','ec2-13-54-170-248.ap-southeast-2.compute.amazonaws.com' ]
+ALLOWED_HOSTS = ['13.54.170.248','ec2-13-54-170-248.ap-southeast-2.compute.amazonaws.com','.onlinefloor.com.au' ]
 
 
 # Application definition
