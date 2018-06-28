@@ -157,7 +157,7 @@ from ecommerce.aws.conf import *
 
 # https://kirr.co/vklau5
 
-encript ssl/tls HttpResponse
+# encript ssl/tls HttpResponse
 CORS_REPLACE_HTTPS_REFERER      = False
 HOST_SCHEME                     = "http://"
 SECURE_PROXY_SSL_HEADER         = None
