@@ -14,14 +14,15 @@ echo "Starting $NAME as `whoami`"
 
 cd $DJANGODIR
 source /var/www/html/django_env/bin/activate
+# run python to set django .env ready for all credential variables
+python import_env.py
 export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 
 # Create the run directory if it doesn't exist
 RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR
-# run python to set django .env ready for all credential variables
-python import_env.py
+
 # Start your Django Unicorn
 # Programs meant to be run under supervisor should not daemonize themselves (do not use --daemon)
 
