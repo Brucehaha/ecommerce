@@ -1,9 +1,7 @@
 from .base import *
-from .production import *
-try:
-    from .production_aws import *
-except:
-    pass
+# from .production import *
+from .production_aws import *
+
 try:
     from .local import *
 except:
