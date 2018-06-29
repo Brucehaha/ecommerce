@@ -100,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME':'django_db',
         'USER':'erpcommerce_user',
-        'PASSWORD':'erpcommerce'
+        'PASSWORD':'erpcommerce',
         'HOST': 'localhost',
         'PORT': '',                      # Set to empty string for default.
     }
