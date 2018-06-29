@@ -14,8 +14,6 @@ stripe.api_key=STRIPE_PRIVATE_KEY
 User = settings.AUTH_USER_MODEL
 
 
-
-
 class BillingProfileManager(models.Manager):
 	def new_or_get(self, request):
 		guest_email_id = request.session.get('guest_email_id')
