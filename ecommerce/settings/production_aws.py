@@ -85,13 +85,24 @@ AUTH_USER_MODEL = 'accounts.User'
 FORCE_SESSION_TO_ONE = True
 FORCE_USER_INACTIVE_END_SESSION = True
 
+STRIPE_PUBLIC_KEY='pk_test_G1nt8Wx2P97tG09vDwpkLQjs'
+STRIPE_PRIVATE_KEY='sk_test_KRibT0JWeBwggF5iksBZ6y3j'
+MAILCHIMP_API="20755894bc9e653f6938b2dc087e429a-us17"
+MAILCHIMP_LIST_ID="fbe3f0b349"
+MAILCHIMP_DC="us17"
+AWS_ACCESS_KEY_ID="AKIAJAL24TXCHYMVS2JQ"
+AWS_SECRET_ACCESS_KEY="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"
+SECRET_KEY='rx)t5_oc22g7oh!^m#2-%nypkva%15x$%27!-m@xf%!^&ad8c*'
+DBPASSWD='erpcommerce'
+DBUSER='erpcommerce_user'
+DBNAME='django_db'
 
-MAILCHIMP_API = os.environ.get("MAILCHIMP_API")
-MAILCHIMP_DC = "us17"
-MAILCHIMP_LIST_ID = os.environ.get("MAILCHIMP_LIST_ID")
-
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", 'pk_test_G1nt8Wx2P97tG09vDwpkLQjs')
-STRIPE_PRIVATE_KEY = os.environ.get("STRIPE_PRIVATE_KEY", "sk_test_KRibT0JWeBwggF5iksBZ6y3j")
+# MAILCHIMP_API = os.environ.get("MAILCHIMP_API")
+# MAILCHIMP_DC = "us17"
+# MAILCHIMP_LIST_ID = os.environ.get("MAILCHIMP_LIST_ID")
+#
+# STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", 'pk_test_G1nt8Wx2P97tG09vDwpkLQjs')
+# STRIPE_PRIVATE_KEY = os.environ.get("STRIPE_PRIVATE_KEY", "sk_test_KRibT0JWeBwggF5iksBZ6y3j")
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
