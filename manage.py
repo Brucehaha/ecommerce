@@ -2,7 +2,7 @@
 import os
 import sys
 import re
-from import_env import read_env
+from ecommerce.import_env import read_env
 ## reference https://gist.github.com/bennylope/2999704
 
 # def read_env():
