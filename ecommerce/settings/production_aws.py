@@ -155,7 +155,7 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/meida/'
 # MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")
 
-# from ecommerce.aws.conf import *
+from ecommerce.aws.conf import *
 
 # https://kirr.co/vklau5
 
