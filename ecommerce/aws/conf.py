@@ -1,10 +1,8 @@
 import datetime
 import os
 AWS_USERNAME = "erpcommerce"
-# AWS_ACCESS_KEY_ID  =  os.environ.get("AWS_ACCESS_KEY_ID")
-# AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_ACCESS_KEY_ID="AKIAJAL24TXCHYMVS2JQ"
-AWS_SECRET_ACCESS_KEY="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"
+AWS_ACCESS_KEY_ID  =  os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_FILE_EXPIRE = 200
 AWS_PRELOAD_METADATA = True
 # with AWS_QUERYSTRING_AUTH true, the link will expire
