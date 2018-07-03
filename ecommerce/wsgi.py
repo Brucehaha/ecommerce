@@ -15,5 +15,5 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings")
 '''set credential before application run on server, because applicaion do not
 run by manage.py anymore on server.
 '''
-read_env()
+read_env('.env')
 application = get_wsgi_application()

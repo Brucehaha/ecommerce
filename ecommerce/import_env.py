@@ -3,13 +3,13 @@ import sys
 import re
 
 
-def read_env():
+def read_env(path):
     """Pulled from Honcho code with minor updates, reads local default
     environment variables from a .env file located in the project root
     directory.
     """
     try:
-        with open('ecommerce/.env') as f:
+        with open(path) as f:
             content = f.read()
     except IOError:
         content = ''

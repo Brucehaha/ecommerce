@@ -38,5 +38,5 @@ if __name__ == "__main__":
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-        read_env()
+        read_env('ecommerce/.env')
     execute_from_command_line(sys.argv)
