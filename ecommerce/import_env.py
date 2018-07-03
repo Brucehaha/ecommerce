@@ -9,7 +9,7 @@ def read_env():
     directory.
     """
     try:
-        with open('.env') as f:
+        with open('ecommerce/.env') as f:
             content = f.read()
     except IOError:
         content = ''
