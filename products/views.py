@@ -28,9 +28,7 @@ class ProductFeaturedDetailView(DetailView):
 
 class ProductListView(ListView):
 	templates = "products/product_list.html"
-	paginate_by = 3
-
-
+	paginate_by = 1
 	def get_context_data(self, *args, **kwargs):
 		context = super().get_context_data(*args, **kwargs)
 		request = self.request
@@ -40,7 +38,7 @@ class ProductListView(ListView):
 
 	def get_queryset(self, *args, **kwargs):
 		request = self.request
-		return Product.objects.all()
+		return Product.objects.all().order_by('title')
 
 
 def product_list_view(request):

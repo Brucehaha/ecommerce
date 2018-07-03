@@ -22,6 +22,8 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('guest/', guest_register, name='guest_register'),
 
+    ##accounts app
+    path('account/', include('accounts.urls', namespace='accounts')),
     ##carts app
     path('cart/', include('carts.urls', namespace='carts')),
     ##products app
