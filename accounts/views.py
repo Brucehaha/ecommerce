@@ -54,7 +54,7 @@ def guest_register(request):
 class LoginView(FormView):
 	form_class = LoginForm
 	success_url = '/'
-	template_name = 'login.html'
+	template_name = 'account/login.html'
 
 	def form_valid(self, form):
 		request = self.request
@@ -84,7 +84,7 @@ class LoginView(FormView):
 
 class RegisterView(CreateView):
 	form_class = RegisterForm
-	template_name = 'register.html'
+	template_name = 'accounts/register.html'
 	success_url = '/login/'
 
 
