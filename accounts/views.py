@@ -54,7 +54,7 @@ def guest_register(request):
 class LoginView(FormView):
 	form_class = LoginForm
 	success_url = '/'
-	template_name = 'account/login.html'
+	template_name = 'accounts/login.html'
 
 	def form_valid(self, form):
 		request = self.request
