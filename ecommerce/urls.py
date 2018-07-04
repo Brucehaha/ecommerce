@@ -10,6 +10,8 @@ from carts.views import cart_refresh
 from products.views import ProductListView,ProductDetailView
 from billing.views import payment_method, payment_method_create
 from marketing.views import subscribe, MarketingPreferenceView, MailchimpWebhooView
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,7 +25,10 @@ urlpatterns = [
     path('guest/', guest_register, name='guest_register'),
 
     ##accounts app
-    path('account/', include('accounts.urls', namespace='accounts')),
+    path('account/', include('accounts.urls', namespace='account')),
+    path('accounts/', RedirectView.as_view(url='/account')),
+    path('accounts/', include("accounts.passwords.urls")),
+
     ##carts app
     path('cart/', include('carts.urls', namespace='carts')),
     ##products app
@@ -42,12 +47,6 @@ urlpatterns = [
     path('subscribe/',subscribe, name='subscribe'),
     path('subscription/',MarketingPreferenceView.as_view(), name='subscription'),
     path('webhooks/email/',MailchimpWebhooView.as_view(), name='mailchimpwebhook'),
-
-
-
-
-
-
  ]
 
 if settings.DEBUG:

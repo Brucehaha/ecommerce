@@ -17,11 +17,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 @login_required
 def account_home_view(request): #accounts/login/?next=/some/path
-	return render(request, "accounts/home.html", {})
+	return render(request, "home.html", {})
 
 
 class AccountHomeView(LoginRequiredMixin, DetailView):
-	template_name='home.html'
+	template_name='accounts/home.html'
 
 	def get_object(self):
 		return self.request.user

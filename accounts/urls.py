@@ -1,11 +1,8 @@
 from django.urls import path
-from .views import (
-        AccountHomeView,
-        )
+from .views import AccountHomeView
 
-
-app_name = "accounts"
+app_name = "account"
 urlpatterns = [
-    path('', AccountHomeView.as_view() ,name='accounts'),
+    path('', AccountHomeView.as_view() ,name='home'),
 
 ]
