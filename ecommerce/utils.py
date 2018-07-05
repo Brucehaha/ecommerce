@@ -7,6 +7,15 @@ from django.utils.text import slugify
 def random_string_generator(size=10, chars=(string.ascii_lowercase + string.digits)):
 	return ''.join(random.choice(chars) for _ in range(size))
 
+def unique_key_id(instance):
+	size = random.randint(30, 45)
+	key = random_string_generator(size=size)
+	klass = instance.__class__
+	qs = klass.objects.filter(key=key)
+	if qs:
+		return unique_order_id(instance)
+	return key
+
 def unique_order_id(instance):
 	order_id = random_string_generator(10).upper()
 	klass = instance.__class__

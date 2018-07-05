@@ -90,7 +90,7 @@ if FORCE_SESSION_TO_ONE:
 ##auto logout users afterh the user is not active
 def post_save_session_user_receiver(sender, instance, created, *args, **kwargs):
     if not created:
-        if instance.active == False:
+        if instance.is_active == False:
             qs = UserSession.objects.filter(user=instance)
             for i in qs:
                 i.end_session()

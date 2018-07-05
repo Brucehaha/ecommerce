@@ -5,6 +5,21 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+
+class ReactivateEmailForm(forms.Form):
+    email       = forms.EmailField()
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        qs = EmailActivation.objects.email_exists(email)
+        if not qs.exists():
+            register_link = reverse("register")
+            msg = """This email does not exists, would you like to <a href="{link}">register</a>?
+            """.format(link=register_link)
+            raise forms.ValidationError(mark_safe(msg))
+        return email
+
 class RegisterForm(forms.ModelForm):
 	email    = forms.EmailField(
 		widget=forms.EmailInput(
@@ -54,7 +69,7 @@ class RegisterForm(forms.ModelForm):
 	def save(self, commit=True):
 		user = super(RegisterForm, self).save(commit=False)
 		user.set_password(self.cleaned_data["password"])
-		#user.active = False #send comfirmation email
+		user.is_active = False #send comfirmation email by signal
 		if commit:
 			user.save()
 		return user
@@ -98,7 +113,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
 	class Meta:
 		model = User
-		fields = ('email', 'password', 'active', 'admin')
+		fields = ('email', 'password', 'is_active', 'admin')
 
 	def clean_password(self):
 		# Regardless of what the user provides, return the initial value.
