@@ -3,16 +3,22 @@ from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
 from django.views.generic import CreateView,FormView,DetailView, View
 from django.views.generic.edit import FormMixin
-from .forms import LoginForm, RegisterForm, GuestForm, ReactivateEmailForm
-from carts.models import Cart
-from .models import GuestEmail
-from .signals import user_logged_in
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.urls import reverse
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import FormMixin
 from ecommerce.mixins import NextUrlMixin, RequestFormAttachMixin
+from .forms import LoginForm, RegisterForm, GuestForm, ReactivateEmailForm
+from carts.models import Cart
+from .models import GuestEmail
+from .signals import user_logged_in
+from django.utils.safestring import mark_safe
+from .models import EmailActivation
+
+
 
 
 class AccountEmailActivateView(FormMixin, View):
@@ -145,10 +151,12 @@ class LoginView(FormView):
 
 
 
-class RegisterView(CreateView):
-	form_class = RegisterForm
-	template_name = 'accounts/register.html'
-	success_url = '/login/'
+class RegisterView(SuccessMessageMixin,CreateView):
+    form_class = RegisterForm
+    template_name = 'accounts/register.html'
+    success_url = '/login/'
+    success_message ='Activation link has been sent to you email, please check'
+    # success_message = 'Please check your email and active you account'
 
 
 # def login(request):

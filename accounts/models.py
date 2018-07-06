@@ -10,7 +10,12 @@ from django.template.loader import get_template
 from ecommerce.utils import unique_key_id
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.urls import reverse
-# send_mail(subject, message, from_email, recipient, html_message)
+from datetime import timedelta
+from django.utils import timezone
+
+
+DEFAULT_ACTIVATION_DAYS = getattr(settings, "DEFAULT_ACTIVATION_DAYS", 7)
+# send_mail(subject, message, from_email, recipient, html _message)
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -189,7 +194,7 @@ class EmailActivation(models.Model):
         if not self.activated and not self.forced_expired:
             if self.key:
                 base_url = getattr(settings, 'BASE_URL', 'https://www.eflooring.net')
-                key_path = reverse("account:email-activate", kwargs={'token': self.key}) # use reverse
+                key_path = reverse("account:email-activate", kwargs={'key': self.key}) # use reverse
                 path = "{base}{path}".format(base=base_url, path=key_path)
                 context = {
                     'path': path,
