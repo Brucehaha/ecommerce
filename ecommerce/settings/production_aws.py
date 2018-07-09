@@ -19,7 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = os.environ.get("SECRET_KEY")
 SECRET_KEY='rx)t5_oc22g7oh!^m#2-%nypkva%15x$%27!-m@xf%!^&ad8c*'
 
@@ -29,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['13.54.170.248','ec2-13-54-170-248.ap-southeast-2.compute.amazonaws.com','.eflooring.net' ]
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'tech@goldenfield.com.au' # sendgrid
+EMAIL_HOST_USER = 'bruce.li@goldenfield.com.au' # sendgrid
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
