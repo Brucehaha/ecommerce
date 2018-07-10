@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME="django_app"                                   # Name of the application
+NAME="ecommerce"                                   # Name of the application
 DJANGODIR=/var/www/html/django_env/src               # Django project directory
 SOCKFILE=/var/www/html/django_env/run/gunicorn.sock  # we will communicte using this unix socket
 USER=ubuntu                                         # the user to run as
