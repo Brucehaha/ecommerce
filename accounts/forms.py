@@ -151,7 +151,9 @@ class LoginForm(forms.Form):
 			 	}
 			)
 		)
-
+	def __init__(self, request, *args, **kwargs):
+		self.request = request
+		super(LoginForm, self).__init__(*args, **kwargs)
 
 # class RegisterForm(forms.Form):
 # 	username = forms.CharField(
@@ -162,14 +164,14 @@ class LoginForm(forms.Form):
 # 			 	}
 # 			)
 # 		)
-	email    = forms.EmailField(
-		widget=forms.EmailInput(
-			attrs={
-				"class": "form-control",
-			 	"placeholder": "email"
-			 	}
-			)
-		)
+	# email    = forms.EmailField(
+	# 	widget=forms.EmailInput(
+	# 		attrs={
+	# 			"class": "form-control",
+	# 		 	"placeholder": "email"
+	# 		 	}
+	# 		)
+	# 	)
 # 	password = forms.CharField(
 # 		widget=forms.PasswordInput(
 # 			attrs={

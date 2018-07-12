@@ -36,8 +36,7 @@ class AccountEmailActivateView(FormMixin, View):
                 messages.success(request, "Your email has been confirmed. Please login.")
                 return redirect("login")
             else:
-                activated_qs = qs.filter(activated=True)
-                if activated_qs.exists():
+                  if activated_qs.exists():
                     reset_link = reverse("password_reset")
                     msg = """Your email has already been confirmed
                     Do you need to <a href="{link}">reset your password</a>?
@@ -122,11 +121,22 @@ class LoginView(FormView):
 	success_url = '/'
 	template_name = 'accounts/login.html'
 
-	def form_valid(self, form):
+	def get_form_kwargs(self):
+		kwargs = super(LoginView, self).get_form_kwargs()
+		kwargs['request'] = self.request #send request data to form class for process
+		return kwargs
+
+	def get_next_url(self):
 		request = self.request
 		next_ = request.GET.get('next')
 		next_post = request.POST.get('next')
 		redirect_path = next_ or next_post or None
+		if is_safe_url(redirect_path, request.get_host()):
+			return redirect(redirect_path)
+		return "/"
+
+	def form_valid(self, form):
+		request = self.request
 		email = form.cleaned_data.get("email")
 		password = form.cleaned_data.get("password")
 		user = authenticate(request, email=email, password=password)
@@ -141,12 +151,9 @@ class LoginView(FormView):
 				del request.session['guest_email_id']
 			except KeyError:
 				pass
-
 			Cart.objects.load_cart(request)
-			if is_safe_url(redirect_path, request.get_host()):
-				return redirect(redirect_path)
-			else:
-				return redirect("/")
+			next_path= self.get_next_url()
+			return redirect(next_path)
 		return super(LoginView, self).form_invalid(form)
 
 

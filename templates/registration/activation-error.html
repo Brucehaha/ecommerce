@@ -4,5 +4,10 @@
     <div class="col-12 text-center py-5">
             <h1 class='my-5 py-5'>Activatioin Error.Please try again</h1>
       </div>
+      <div class="col-12 text-center py-5">
+        <form method='POST' action=''>{% csrf_token %}
+          {{ form.as_p }}
+          <button class='btn btn-default' type='submit' value='Resend Activation'>Resend Activation</button>
+      </div>
 </div>
 {% endblock %}
