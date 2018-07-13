@@ -116,24 +116,10 @@ def guest_register(request):
 	return redirect("/register/")
 
 
-class LoginView(FormView):
+class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
 	form_class = LoginForm
 	success_url = '/'
 	template_name = 'accounts/login.html'
-
-	def get_form_kwargs(self):
-		kwargs = super(LoginView, self).get_form_kwargs()
-		kwargs['request'] = self.request #send request data to form class for process
-		return kwargs
-
-	def get_next_url(self):
-		request = self.request
-		next_ = request.GET.get('next')
-		next_post = request.POST.get('next')
-		redirect_path = next_ or next_post or None
-		if is_safe_url(redirect_path, request.get_host()):
-			return redirect(redirect_path)
-		return "/"
 
 	def form_valid(self, form):
 		request = self.request

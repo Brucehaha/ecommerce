@@ -155,6 +155,7 @@ class LoginForm(forms.Form):
 		self.request = request
 		super(LoginForm, self).__init__(*args, **kwargs)
 
+
 # class RegisterForm(forms.Form):
 # 	username = forms.CharField(
 # 		widget=forms.PasswordInput(
