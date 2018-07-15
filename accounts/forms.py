@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import EmailActivation
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+from django.utils.safestring import mark_safe
 
 
 User = get_user_model()
@@ -173,7 +174,7 @@ class LoginForm(forms.Form):
 			not_active=qs.filter(is_active=False)
 			if not_active.exists():
 				EmailActivation_qs = EmailActivation.objects.filter(email=email)
-				is_confirmable = EmailActivation_qs.confirmable().exits()
+				is_confirmable = EmailActivation_qs.confirmable().exists()
 				if is_confirmable:
 					msg1="Please check you email to confirm your account or"+reconfirm_msg
 					raise forms.ValidationError(mark_safe(msg1))
