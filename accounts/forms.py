@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
+from .models import EmailActivation
+from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
 
 User = get_user_model()
@@ -154,6 +157,42 @@ class LoginForm(forms.Form):
 	def __init__(self, request, *args, **kwargs):
 		self.request = request
 		super(LoginForm, self).__init__(*args, **kwargs)
+
+	def clean(self):
+		request = self.request
+		cleaned_data = super(LoginForm, self).clean()#or self.cleaned_data
+		email = cleaned_data.get("email")
+		password = cleaned_data.get("password")
+		qs = User.objects.filter(email=email)
+		if qs.exists():
+			#user is registered, check active
+			link = reverse("account:email-reactivate")
+			reconfirm_msg = """Go to <a href='{resend_link}'>
+			resend confirmation email</a>.
+			""".format(resend_link = link)
+			not_active=qs.filter(is_active=False)
+			if not_active.exists():
+				EmailActivation_qs = EmailActivation.objects.filter(email=email)
+				is_confirmable = EmailActivation_qs.confirmable().exits()
+				if is_confirmable:
+					msg1="Please check you email to confirm your account or"+reconfirm_msg
+					raise forms.ValidationError(mark_safe(msg1))
+				# if if_confirmable = False, validate if the email exits in Email
+				#activation object and the actived is False
+				is_email_exists = EmailActivation.objects.email_exists(email=email)
+				if is_email_exists:
+					msg2 = "Email not confirmed, "+reconfirm_msg
+					raise forms.ValidationError(mark_safe(msg2))
+				if not is_confirmable and is_email_exists:
+					raise forms.ValidationError("User is inactive")
+		user = authenticate(request, email=email, password=password)
+		if user is None:
+			raise forms.ValidationError("Invalid user name or password")
+		login(request, user)
+
+		self.user=user
+		return cleaned_data
+
 
 
 # class RegisterForm(forms.Form):

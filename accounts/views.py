@@ -120,27 +120,21 @@ class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
 	form_class = LoginForm
 	success_url = '/'
 	template_name = 'accounts/login.html'
+	default_next="accounts/home.html"
 
 	def form_valid(self, form):
-		request = self.request
-		email = form.cleaned_data.get("email")
-		password = form.cleaned_data.get("password")
-		user = authenticate(request, email=email, password=password)
-		if user is not None:
-			if not user.is_active:
-				message.error(request, "This user is inactive")
-				return super(LoginView, self).form_invalid(form)
-			login(request, user)
-			user_logged_in.send(user.__class__, instance=user, request=request)
-			## retrive the cart and cart items number
-			try:
-				del request.session['guest_email_id']
-			except KeyError:
-				pass
-			Cart.objects.load_cart(request)
-			next_path= self.get_next_url()
-			return redirect(next_path)
-		return super(LoginView, self).form_invalid(form)
+		request =self.request
+		user = form.user
+		print(user)
+		user_logged_in.send(user.__class__, instance=user, request=request)
+		## retrive the cart and cart items number
+		try:
+			del request.session['guest_email_id']
+		except KeyError:
+			pass
+		# Cart.objects.load_cart(request)
+		next_path= self.get_next_url()
+		return redirect(next_path)
 
 
 
