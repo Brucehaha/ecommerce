@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
-from .models import EmailActivation
+from .models import EmailActivation, GuestEmail
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.utils.safestring import mark_safe
@@ -127,7 +127,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
 
 
-class GuestForm(forms.Form):
+class GuestForm(forms.ModelForm):
 	email 	= forms.EmailField(
 			widget=forms.EmailInput(
 				attrs={
@@ -136,6 +136,24 @@ class GuestForm(forms.Form):
 				 	}
 				)
 			)
+
+	class Meta:
+		model = GuestEmail
+		fields = [
+			'email'
+		]
+
+	def __init__(self, request, *args, **kwargs):
+		self.request = request
+		super(GuestForm, self).__init__(*args, **kwargs)
+
+	# def save(self, commit=True):
+	# 	obj = super(GuestForm, self).save(commit=False)
+	# 	if commit:
+	# 		obj.save()
+	# 		# request = self.request
+	# 		# request.session['guest_email_id'] = obj.id
+	# 	return obj
 
 
 class LoginForm(forms.Form):

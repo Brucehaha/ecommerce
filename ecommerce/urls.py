@@ -4,7 +4,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib import admin
 from django.urls import path, include
 from addresses.views import addess_create, address_choose
-from accounts.views import LoginView, RegisterView, guest_register
+from accounts.views import LoginView, RegisterView, GuestRegisterView
 from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
 from products.views import ProductListView,ProductDetailView
@@ -22,7 +22,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
-    path('guest/', guest_register, name='guest_register'),
+    path('guest/', GuestRegisterView.as_view(), name='guest_register'),
 
     ##accounts app
     path('account/', include('accounts.urls', namespace='account')),

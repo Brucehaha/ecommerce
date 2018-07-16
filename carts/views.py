@@ -55,9 +55,9 @@ def cart_update(request):
 def check_out(request):
 	cart_obj, new_cart = Cart.objects.new_or_get(request)
 	order_obj = None
-	form = LoginForm()
+	form = LoginForm(request=request)
 	address_form = AddressForm()
-	guest_form = GuestForm()
+	guest_form = GuestForm(request=request)
 	shipping_address_id = request.session.get('shipping_address_id')
 	billing_address_id = request.session.get('billing_address_id')
 	address_qs = None
@@ -113,7 +113,7 @@ def check_out(request):
 	context={
 		"order_obj" : order_obj,
 		"billing_profile" : billing_profile,
-		"form":LoginForm,
+		"form":form,
 		"guest_form" : guest_form,
 		"address_form" : address_form,
 		"address_qs" : address_qs,

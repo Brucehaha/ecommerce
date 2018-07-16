@@ -6,11 +6,11 @@
 <div class="row">
 	<div class="col-6">
 	 	Login
-	 	{% include 'snippets/login_form.html' with form=form next_url=request.build_absolute_uri %}
+	 	{% include 'accounts/snippets/login_form.html' with form=form next_url=request.build_absolute_uri %}
 	 </div>
 	 {% url "guest_register" as guest_register %}
  	<div class="col-6">
-	 	{% include 'snippets/login_form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register %}
+	 	{% include 'accounts/snippets/login_form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register %}
 
  	</div>
 </div>

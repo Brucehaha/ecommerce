@@ -19,8 +19,6 @@ from django.utils.safestring import mark_safe
 from .models import EmailActivation
 
 
-
-
 class AccountEmailActivateView(FormMixin, View):
     success_url = '/login/'
     form_class = ReactivateEmailForm
@@ -70,12 +68,20 @@ class AccountEmailActivateView(FormMixin, View):
         return render(self.request, 'registration/activation-error.html', context)
 
 
-class GuestRegisterView(NextUrlMixin,  RequestFormAttachMixin, CreateView):
+class GuestRegisterView(NextUrlMixin,RequestFormAttachMixin, CreateView):
     form_class = GuestForm
     default_next = '/register/'
+    template_name = 'carts/checkout.html'
 
     def get_success_url(self):
         return self.get_next_url()
+   ## requset has been send to modelForm,form valid can be move to save as well
+    def form_valid(self, form):
+        self.object=form.save(commit=True)
+        request=self.request
+        email = form.cleaned_data.get("email")
+        request.session['guest_email_id'] = email
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         return redirect(self.default_next)
@@ -96,31 +102,33 @@ class AccountHomeView(LoginRequiredMixin, DetailView):
 # 	def dispatch(self, *args, **kwargs):
 # 		return super(LoginRequiredMixin, self).dispatch(self, *args, **kwargs)
 
-def guest_register(request):
-	form = GuestForm(request.POST or None)
-	context = {
-		"form": form
-	}
-	next_ = request.GET.get('next')
-	next_post = request.POST.get('next')
-	redirect_path = next_ or next_post or None
+# def guest_register(request):
+# 	form = GuestForm(request.POST or None)
+# 	context = {
+# 		"form": form
+# 	}
+# 	next_ = request.GET.get('next')
+# 	next_post = request.POST.get('next')
+# 	redirect_path = next_ or next_post or None
+#
+# 	if form.is_valid():
+# 		email = form.cleaned_data.get("email")
+# 		new_guest_email = GuestEmail.objects.get_or_create(email=email)
+# 		request.session['guest_email_id'] = email
+# 		if is_safe_url(redirect_path, request.get_host()):
+# 			return redirect(redirect_path)
+# 		else:
+# 			redirect("/register/")
+# 	return redirect("/register/")
 
-	if form.is_valid():
-		email = form.cleaned_data.get("email")
-		new_guest_email = GuestEmail.objects.get_or_create(email=email)
-		request.session['guest_email_id'] = email
-		if is_safe_url(redirect_path, request.get_host()):
-			return redirect(redirect_path)
-		else:
-			redirect("/register/")
-	return redirect("/register/")
+
 
 
 class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
 	form_class = LoginForm
 	success_url = '/'
 	template_name = 'accounts/login.html'
-	default_next="accounts/home.html"
+	default_next="/account/"
 
 	def form_valid(self, form):
 		request =self.request
@@ -132,7 +140,7 @@ class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
 			del request.session['guest_email_id']
 		except KeyError:
 			pass
-		# Cart.objects.load_cart(request)
+		Cart.objects.load_cart(request)
 		next_path= self.get_next_url()
 		return redirect(next_path)
 
