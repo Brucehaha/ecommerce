@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="my-4">
+	<h1>Order: {{ object.order_id }}</h1>
+	<ul class="list-group">
+	  <li class="list-group-item disabled">{{ object.timestamp}}</li>
+	  <li class="list-group-item disabled"><strong>Shipping address: </strong> {{ object.shipping_address.get_address }}</li>
+	  <li class="list-group-item disabled"><strong>Billing address: </strong> {{ object.billing.get_address }}</li>
+	  <li class="list-group-item disabled">{{ object.status }}</li>
+		<li class="list-group-item disabled">{{ object.total }}</li>
+
+	</ul>
+</div>
+<div class="my-4">
+	 <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Product</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Unit Price</th>
+			<th scope="col">Total Price</th>
+    </tr>
+  </thead>
+  <tbody>
+		{% for product in object.cart.products.all %}
+
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ product.title }}</td>
+      <td>1 </td>
+      <td>{{ product.price}}</td>
+			<td>{{ product.price}}</td>
+    </tr>
+		{% endfor %}
+
+  </tbody>
+</table>
+</div>
+
+{% endblock %}

@@ -75,7 +75,7 @@ class GuestRegisterView(NextUrlMixin,RequestFormAttachMixin, CreateView):
 
     def get_success_url(self):
         return self.get_next_url()
-   ## requset has been send to modelForm,form valid can be move to save as well
+   ## requset has been send to modelForm,form valid can be moved to save() as well
     def form_valid(self, form):
         self.object=form.save(commit=True)
         request=self.request

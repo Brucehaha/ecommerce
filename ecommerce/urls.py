@@ -3,14 +3,18 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
+
 from addresses.views import addess_create, address_choose
 from accounts.views import LoginView, RegisterView, GuestRegisterView
 from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
+from addresses.views import addess_create, address_choose
+from accounts.views import LoginView, RegisterView, GuestRegisterView
 from products.views import ProductListView,ProductDetailView
 from billing.views import payment_method, payment_method_create
 from marketing.views import subscribe, MarketingPreferenceView, MailchimpWebhooView
-from django.views.generic import RedirectView
+from orders.views import OrderListView
 
 
 urlpatterns = [
@@ -47,6 +51,10 @@ urlpatterns = [
     path('subscribe/',subscribe, name='subscribe'),
     path('subscription/',MarketingPreferenceView.as_view(), name='subscription'),
     path('webhooks/email/',MailchimpWebhooView.as_view(), name='mailchimpwebhook'),
+
+    ##orders
+    path('orders/', include('orders.urls', namespace='orders')),
+
  ]
 
 if settings.DEBUG:

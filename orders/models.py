@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from carts.models import Cart
 from billing.models import BillingProfile
 from addresses.models import Address
@@ -37,8 +38,9 @@ class OrderManager(models.Manager):
 						cart=cart_obj)
 			new_obj = True
 		return obj, new_obj
-
-
+	def list_order(self, billing_profile):
+		qs = self.get_queryset().filter(billing_profile=billing_profile)
+		return qs
 
 
 class Order(models.Model):
@@ -51,11 +53,16 @@ class Order(models.Model):
 	ship_total			= models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
 	total				= models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
 	active				= models.BooleanField(default=True)
+	timestamp			= models.DateTimeField(auto_now_add=True)
 
 	objects=OrderManager()
 
 	def __str__(self) :
 		return str(self.id)
+
+	def get_absolute_url(self):
+		# return "/products/{slug}/".format(slug=self.slug)
+		return reverse("orders:detail", kwargs={"id": self.order_id})
 
 	def update_total(self):
 		cart_total = self.cart.total
