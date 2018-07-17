@@ -35,25 +35,16 @@ class OrderListView(LoginRequiredMixin, ListView):
 class OrderDetailView(LoginRequiredMixin, DetailView):
 	template_name = "orders/order.html"
 
-	# def get_context_data(self, *args, **kwargs):
-	# 	context = super().get_context_data(*args, **kwargs)
-	# 	request = self.request
-	# 	id = self.kwargs.get('id')
-	#
-	# 	cart_obj, new_obj = Cart.objects.get(request)
-	# 	context['cart'] = cart_obj
-	# 	return context
-
 	def get_object(self, *args, **kwargs):
 		request =self.request
 		id = self.kwargs.get('id')
-
+		billing_profile, is_created = BillingProfile.objects.new_or_get(request)
 		try:
-			obj = Order.objects.get(order_id=id)
-		except Product.DoesNotExist:
+			obj = Order.objects.get(order_id=id, billing_profile=billing_profile)
+		except Order.DoesNotExist:
 			raise Http404("not found")
 		except Product.MultipleObjectsReturned:
-			qs = Product.objects.filter(slug=slug, active= True)
+			qs = Product.objects.filter(slug=slug, active=True)
 			obj = qs.first()
 		except:
 			raise Http404("Uhhmmm")
