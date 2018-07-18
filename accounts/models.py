@@ -78,11 +78,17 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = []# Email & Password are required by default.
     def get_full_name(self):
         # The user is identified by their email address
+        full_name="{} {}".format(self.first_name, self.last_name)
         return self.email
     @property
     def get_short_name(self):
         # The user is identified by their email address
-        return self.email.split('@')[0]
+        name = None
+        if self.first_name:
+            name=self.first_name
+        else:
+            name = self.email.split('@')[0]
+        return name
 
     def __str__(self):              # __unicode__ on Python 2
         return self.email

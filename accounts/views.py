@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
-from django.views.generic import CreateView,FormView,DetailView, View
+from django.views.generic import CreateView,FormView,DetailView, UpdateView,View
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -11,13 +11,28 @@ from django.urls import reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import FormMixin
 from ecommerce.mixins import NextUrlMixin, RequestFormAttachMixin
-from .forms import LoginForm, RegisterForm, GuestForm, ReactivateEmailForm
+from .forms import LoginForm, RegisterForm, GuestForm, ReactivateEmailForm, UserDetailChangeForm
 from carts.models import Cart
 from .models import GuestEmail
 from .signals import user_logged_in
 from django.utils.safestring import mark_safe
 from .models import EmailActivation
 
+
+class UserDetailUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = UserDetailChangeForm
+    template_name = 'accounts/detail-update-view.html'
+
+    def get_object(self):
+        return self.request.user
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserDetailUpdateView, self).get_context_data(*args, **kwargs)
+        context['title'] = 'Change Your Account Details'
+        return context
+
+    def get_success_url(self):
+        return reverse("account:home")
 
 class AccountEmailActivateView(FormMixin, View):
     success_url = '/login/'
@@ -88,61 +103,61 @@ class GuestRegisterView(NextUrlMixin,RequestFormAttachMixin, CreateView):
 
 @login_required
 def account_home_view(request): #accounts/login/?next=/some/path
-	return render(request, "home.html", {})
+    return render(request, "home.html", {})
 
 
 class AccountHomeView(LoginRequiredMixin, DetailView):
-	template_name='accounts/home.html'
+    template_name='accounts/home.html'
 
-	def get_object(self):
-		return self.request.user
+    def get_object(self):
+        return self.request.user
 #
 # class LoginRequiredMixin(object):
-# 	@method_decorator(login_required)
-# 	def dispatch(self, *args, **kwargs):
-# 		return super(LoginRequiredMixin, self).dispatch(self, *args, **kwargs)
+#     @method_decorator(login_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super(LoginRequiredMixin, self).dispatch(self, *args, **kwargs)
 
 # def guest_register(request):
-# 	form = GuestForm(request.POST or None)
-# 	context = {
-# 		"form": form
-# 	}
-# 	next_ = request.GET.get('next')
-# 	next_post = request.POST.get('next')
-# 	redirect_path = next_ or next_post or None
+#     form = GuestForm(request.POST or None)
+#     context = {
+#         "form": form
+#     }
+#     next_ = request.GET.get('next')
+#     next_post = request.POST.get('next')
+#     redirect_path = next_ or next_post or None
 #
-# 	if form.is_valid():
-# 		email = form.cleaned_data.get("email")
-# 		new_guest_email = GuestEmail.objects.get_or_create(email=email)
-# 		request.session['guest_email_id'] = email
-# 		if is_safe_url(redirect_path, request.get_host()):
-# 			return redirect(redirect_path)
-# 		else:
-# 			redirect("/register/")
-# 	return redirect("/register/")
+#     if form.is_valid():
+#         email = form.cleaned_data.get("email")
+#         new_guest_email = GuestEmail.objects.get_or_create(email=email)
+#         request.session['guest_email_id'] = email
+#         if is_safe_url(redirect_path, request.get_host()):
+#             return redirect(redirect_path)
+#         else:
+#             redirect("/register/")
+#     return redirect("/register/")
 
 
 
 
 class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
-	form_class = LoginForm
-	success_url = '/'
-	template_name = 'accounts/login.html'
-	default_next="/account/"
+    form_class = LoginForm
+    success_url = '/'
+    template_name = 'accounts/login.html'
+    default_next="/account/"
 
-	def form_valid(self, form):
-		request =self.request
-		user = form.user
-		print(user)
-		user_logged_in.send(user.__class__, instance=user, request=request)
-		## retrive the cart and cart items number
-		try:
-			del request.session['guest_email_id']
-		except KeyError:
-			pass
-		Cart.objects.load_cart(request)
-		next_path= self.get_next_url()
-		return redirect(next_path)
+    def form_valid(self, form):
+        request =self.request
+        user = form.user
+        print(user)
+        user_logged_in.send(user.__class__, instance=user, request=request)
+        ## retrive the cart and cart items number
+        try:
+            del request.session['guest_email_id']
+        except KeyError:
+            pass
+        Cart.objects.load_cart(request)
+        next_path= self.get_next_url()
+        return redirect(next_path)
 
 
 
@@ -155,46 +170,46 @@ class RegisterView(SuccessMessageMixin,CreateView):
 
 
 # def login(request):
-# 	form = LoginForm(request.POST or None)
-# 	context = {
-# 		"form": form
-# 	}
+#     form = LoginForm(request.POST or None)
+#     context = {
+#         "form": form
+#     }
 #
-# 	next_ = request.GET.get('next')
-# 	next_post = request.POST.get('next')
-# 	redirect_path = next_ or next_post or None
+#     next_ = request.GET.get('next')
+#     next_post = request.POST.get('next')
+#     redirect_path = next_ or next_post or None
 #
-# 	if form.is_valid():
-# 		username = form.cleaned_data.get("username")
-# 		password = form.cleaned_data.get("password")
-# 		user = authenticate(request, username=username, password=password)
-# 		if user is not None:
-# 			auth_login(request, user)
-# 			## retrive the cart and cart items number
-# 			try:
-# 				del request.session['guest_email_id']
-# 			except KeyError:
-# 				pass
+#     if form.is_valid():
+#         username = form.cleaned_data.get("username")
+#         password = form.cleaned_data.get("password")
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             auth_login(request, user)
+#             ## retrive the cart and cart items number
+#             try:
+#                 del request.session['guest_email_id']
+#             except KeyError:
+#                 pass
 #
-# 			Cart.objects.load_cart(request)
-# 			if is_safe_url(redirect_path, request.get_host()):
-# 				return redirect(redirect_path)
-# 			else:
-# 				return redirect("/")
-# 		else:
-# 			print("Error")
-# 	return render(request, "login.html", context)
+#             Cart.objects.load_cart(request)
+#             if is_safe_url(redirect_path, request.get_host()):
+#                 return redirect(redirect_path)
+#             else:
+#                 return redirect("/")
+#         else:
+#             print("Error")
+#     return render(request, "login.html", context)
 # # def register(request):
-# 	form = RegisterForm(request.POST or None)
-# 	context = {
-# 		"form": form
-# 	}
+#     form = RegisterForm(request.POST or None)
+#     context = {
+#         "form": form
+#     }
 #
-# 	if form.is_valid():
-# 		print(form.cleaned_data)
-# 		email = form.cleaned_data.get("email")
-# 		password = form.cleaned_data.get("password")
+#     if form.is_valid():
+#         print(form.cleaned_data)
+#         email = form.cleaned_data.get("email")
+#         password = form.cleaned_data.get("password")
 #
-# 		new_user = User.objects.create_user(email, password)
-# 		print(new_user)
-# 	return render(request, "register.html", context)
+#         new_user = User.objects.create_user(email, password)
+#         print(new_user)
+#     return render(request, "register.html", context)

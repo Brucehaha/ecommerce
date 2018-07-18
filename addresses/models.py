@@ -1,6 +1,6 @@
 from django.db import models
 from billing.models import BillingProfile
-
+from django.urls import reverse
 
 ADDRESS_TYPE = (
 	('shipping', 'Shipping'),
@@ -22,6 +22,9 @@ class Address(models.Model):
 	def __str__(self):
 		return str(self.billing_profile)
 
+	def get_absolute_url(self):
+		return reverse("address-update", kwargs={"pk": self.pk})
+
 	def get_address(self):
 		return '{address_line1} {address_line2} {suburb} {state} {country} {postcode}'.format(
 				address_line1 = self.address_line1,
@@ -29,6 +32,6 @@ class Address(models.Model):
 				suburb		  = self.suburb,
 				state		  = self.state,
 				country       = self.country,
-				postcode	  = self.postcode	
+				postcode	  = self.postcode
 
 			)

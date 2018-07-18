@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+	<div class="container">
 {% if not billing_profile %}
 <div class="row">
 	<div class="col-6">
@@ -16,30 +16,39 @@
 </div>
 {% else %}
 	{% if not order_obj.shipping_address %}
-		<div class="row">
+		<div class="row my-4">
 			<div class="col-12">
-				<h1>Shipping Address</h1>
+				<h3>Shipping Address</h3>
 			</div>
-			<div class="col-12">
+			</div>
+			<div class="row my-4">
+			<div class="col-sm-6">
+				<strong>Add Address</strong>
+
+				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='shipping' %}
+			</div>
+			<div class="col-sm-6 mx-auto">
+				<strong>Address history</strong>
 	 			{% include 'addresses/address_reuse.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='shipping'  %}
 			</div>
-
-			<div class="col-12">
-	 			{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='shipping' %}
-	 		</div>
 	 	</div>
 {% elif not order_obj.billing_address %}
-		<div class="row">
+		<div class="row my-4">
 			<div class="col-12">
-				<h1>Billing Address</h1>
+				<h3>Billing Address</h3>
 			</div>
-			<div class="col-12">
+			</div>
+		<div class="row my-4">
+
+			<div class="col-sm-6">
+				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='billing' %}
+			</div>
+			<div class="col-sm-6 mx-auto">
+				<strong>Address history</strong>
 	 			{% include 'addresses/address_reuse.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='billing'  %}
 			</div>
-			<div class="col-12">
-				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='billing' %}
-	 		</div>
-	 	</div>
+		</div>
+
 
 
 
@@ -73,10 +82,11 @@
 						<button type="submit" class="btn btn-default">Checkout</button>
 						</form>
 					</div>
+				</div>
 				{% endif %}
 	{% endif %}
 
 {% endif %}
-
+</div>
 
 {% endblock %}

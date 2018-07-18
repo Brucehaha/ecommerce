@@ -15,7 +15,7 @@
           {% for product in carts.products.all %}
             <tr class="cartList">
               <th scope="row">{{ forloop.counter }}</th>
-              <td>{{ product.title }} 
+              <td>{{ product.title }}
                 {% include "products/snippets/remove-form.html" with product_id=product.id %}
               </td>
               <td>{{ product.price}}</td>
@@ -26,21 +26,36 @@
         <tbody>
           <tr>
             <th scope="row"></th>
-            <td colspan="2"><b>Subtotal</b> <span class="subtotal">{{ carts.subtotal }}</span></td>
+            <td colspan="1"><b>Sub Total</b> </span></td>
+						<td colspan="1"> <span class="subtotal">{{ carts.subtotal }}</span></td>
+
           </tr>
           <tr>
             <th scope="row"></th>
-            <td colspan="2"><b>Total</b><span class="total"> {{ carts.total }}</span></td>
+						<td colspan="1"><b>Total</b></td>
+						<td colspan="1"><span class="total"> {{ carts.total }}</span></td>
+
           </tr>
             <tr>
             <th scope="row"></th>
 
-            <td colspan="2"><a class="button btn-block btn-success" href='{% url "carts:checkout" %}'>Checkout</a></td>
+						<td colspan="1">
+
+						</td>
+						<td colspan="1">
+							<form action='{% url "carts:checkout" %}'>
+								<input class="btn btn-primary" type="submit" value="Checkout">
+							</form>
+						</td>
+
+
+
           </tr>
-          
+
 
         </tbody>
-      </table>    
+      </table>
+
 {% else %}
     <p>Cart is empty</p>
   {% endif %}
@@ -51,4 +66,4 @@
 
 
 
-{% endblock %} 
+{% endblock %}

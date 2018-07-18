@@ -2,10 +2,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 
-from addresses.views import addess_create, address_choose
+from addresses.views import addess_create, address_choose, AddressListView, AddressCreateView, AddressUpdateView
 from accounts.views import LoginView, RegisterView, GuestRegisterView
 from .views import home_page, contact_page, about_page
 from carts.views import cart_refresh
@@ -43,6 +43,9 @@ urlpatterns = [
     path('accounts/address', addess_create, name='address'),
     path('accounts/address_choose', address_choose, name='address_choose'),
     path('api/cart/', cart_refresh, name='cart_refresh'),
+    re_path(r'^addresses/$', AddressListView.as_view(), name='addresses'),
+    re_path(r'^addresses/create/$', AddressCreateView.as_view(), name='address-create'),
+    re_path(r'^addresses/(?P<pk>\d+)/$', AddressUpdateView.as_view(), name='address-update'),
 
     path('payment-method/',payment_method, name='payment_method'),
     path('payment-method/create/',payment_method_create, name='payment_method_create'),

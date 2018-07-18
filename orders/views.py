@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Order
 from billing.models import BillingProfile
 
-# Create your views here.
+
 
 class OrderListView(LoginRequiredMixin, ListView):
 	template_name = "orders/orders.html"
