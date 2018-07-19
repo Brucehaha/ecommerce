@@ -2,13 +2,29 @@ from django.http import Http404, JsonResponse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 from analytics.mixins import ObjectViewedMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Product
 from carts.models import Cart
 
 
+class ProductViewHistory(LoginRequiredMixin, ListView):
+    template_name = "products/view_history.html"
+    paginate_by = 6
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        request = self.request
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
+        context['carts'] = cart_obj
+        return context
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        qs = user.objectviewed_set.by_model(Product, model_queryset=True)
+        return qs
+
 class ProductFeaturedListView(ListView):
 	#queryset = Product.objects.all()
-	templates = "products/product_list.html"
+	template_name = "products/product_list.html"
 
 	def get_queryset(self, *args, **kwargs):
 		request = self.request
@@ -17,7 +33,7 @@ class ProductFeaturedListView(ListView):
 
 class ProductFeaturedDetailView(DetailView):
 	queryset = Product.objects.featured()
-	templates = "products/featured_detail.html"
+	template_name  = "products/featured_detail.html"
 
 	# def get_queryeset(self, *args, **kwargs):
 	# 	request = self.request
@@ -27,7 +43,7 @@ class ProductFeaturedDetailView(DetailView):
 
 
 class ProductListView(ListView):
-	templates = "products/product_list.html"
+	template_name  = "products/product_list.html"
 	paginate_by = 1
 	def get_context_data(self, *args, **kwargs):
 		context = super().get_context_data(*args, **kwargs)

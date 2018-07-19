@@ -23,14 +23,14 @@ def subscribe(request):
     else:
         return redirect('/login/?next=/subscription/')
     if created:
-        return rediret('/')
+        return rediret('/account')
     else:
         if request.method == 'POST':
             form = MailchimpForm(request.POST, instance = mailchimp_obj)
             print(mailchimp_obj)
             if form.is_valid():
                 form.save()
-                return redirect('/')
+                return redirect('/account')
         else:
             form = MailchimpForm(instance = mailchimp_obj)
         return render(request, 'marketing/subscription.html', {"form":form})
@@ -39,7 +39,7 @@ def subscribe(request):
 class MarketingPreferenceView(SuccessMessageMixin, UpdateView):
     form_class = MailchimpForm
     template_name = 'marketing/subscription.html'
-    success_url ='/subscription/'
+    success_url ='/account/'
     success_message = "{calculated_field}" # replace the method by % below
     # success_message = "%(calculated_field)" #
 

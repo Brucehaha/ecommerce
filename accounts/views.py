@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
-from django.views.generic import CreateView,FormView,DetailView, UpdateView,View
+from django.utils.safestring import mark_safe
+from django.views.generic import CreateView,FormView,DetailView, ListView, UpdateView,View
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -15,8 +16,10 @@ from .forms import LoginForm, RegisterForm, GuestForm, ReactivateEmailForm, User
 from carts.models import Cart
 from .models import GuestEmail
 from .signals import user_logged_in
-from django.utils.safestring import mark_safe
 from .models import EmailActivation
+
+
+
 
 
 class UserDetailUpdateView(LoginRequiredMixin, UpdateView):

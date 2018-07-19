@@ -11,16 +11,6 @@
 
 	<div class="row my-4">
 		<div class="col-12 col-md-6 mx-auto">
-			{% if messages %}
-					<div class="alert alert-warning messages" role="alert" >
-					    {% for message in messages %}
-								    <span {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-								        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-								        {{ message }}
-								    </span></br>
-					    {% endfor %}
-					</div>
-			{% endif %}
 		    <form method='POST'>
 				{% csrf_token %}
 				{{ form.as_p }}
