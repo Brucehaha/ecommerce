@@ -15,7 +15,7 @@ from products.views import ProductListView,ProductDetailView
 from billing.views import payment_method, payment_method_create
 from marketing.views import subscribe, MarketingPreferenceView, MailchimpWebhooView
 from orders.views import OrderListView
-
+from analytics.views import SalesView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -54,6 +54,7 @@ urlpatterns = [
     path('subscribe/',subscribe, name='subscribe'),
     path('subscription/',MarketingPreferenceView.as_view(), name='subscription'),
     path('webhooks/email/',MailchimpWebhooView.as_view(), name='mailchimpwebhook'),
+    path('sales-report/',SalesView.as_view(), name='sales-report'),
 
     ##orders
     path('orders/', include('orders.urls', namespace='orders')),
