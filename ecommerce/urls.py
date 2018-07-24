@@ -54,7 +54,8 @@ urlpatterns = [
     path('subscribe/',subscribe, name='subscribe'),
     path('subscription/',MarketingPreferenceView.as_view(), name='subscription'),
     path('webhooks/email/',MailchimpWebhooView.as_view(), name='mailchimpwebhook'),
-    path('sales-report/',SalesView.as_view(), name='sales-report'),
+    path('analytics/sales',SalesView.as_view(), name='sales-report'),
+    # path('analytics/sales/data/', SalesAjaxView.as_view(), name='sales-analytics-data'),
 
     ##orders
     path('orders/', include('orders.urls', namespace='orders')),
