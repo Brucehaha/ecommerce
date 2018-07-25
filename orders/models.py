@@ -31,7 +31,7 @@ class OrderManagerQuerySet(models.query.QuerySet):
     def by_status(self, status='shipped'):
         return self.recent().filter(status=status)
     def recent(self):
-        return self.order_by('timestamp')
+        return self.order_by('-updated','-timestamp')
 
 class OrderManager(models.Manager):
     def get_queryset(self):
