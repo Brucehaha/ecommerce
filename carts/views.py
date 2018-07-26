@@ -97,17 +97,17 @@ def check_out(request):
 			billing_profile.charge(order_obj)
 			order_obj.mark_paid()
 			cart_obj.cart_checkout()
+            ##delete session card id after check_ou
+			del request.session['cart_id']
+            ##delete cart no. with remove cart items.
+			del request.session['cart_items']
 			if not billing_profile.user:
 				billing_profile.deactivate_card()
-			try:
-				##delete session card id after check_ou
-				del request.session['cart_items','cart_id', 'guest_email_id']
-				# ##delete cart no. with remove cart items.
-				# del request.session['cart_items']
-				# ## delete the session of guest email check out
-				# del request.session['guest_email_id']
-			except KeyError:
-				pass
+				try:
+                	## delete the session of guest email check out
+					del request.session['guest_email_id']
+				except KeyError:
+					pass
 
 			return redirect("carts:success")
 
