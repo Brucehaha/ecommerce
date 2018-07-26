@@ -42,16 +42,16 @@ class OrderManager(models.Manager):
                                         billing_profile=billing_profile,
                                         active=True,
                                         status='created')
-        if qs.count()==1:
+        if qs.count():
             obj = qs.first()
             new_obj = False
-        else:
-            # get rid of the old order and create the new order
-            older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
-            if older_order_qs.exists():
-                older_order_qs.update(active=False)
-            obj = self.model.objects.create(billing_profile=billing_profile,cart=cart_obj)
-            new_obj = True
+        # else:
+        #     # get rid of the old order and create the new order
+        #     older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
+        #     if older_order_qs.exists():
+        #         older_order_qs.update(active=False)
+        #     obj = self.model.objects.create(billing_profile=billing_profile,cart=cart_obj)
+        #     new_obj = True
         return obj, new_obj
     def list_order(self, billing_profile):
         qs = self.get_queryset().filter(billing_profile=billing_profile)
