@@ -1,57 +1,21 @@
 {% extends "base.html" %}
 
 {% block js %}
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<script>
-$(document).ready(function(){
-  getSalesData()
-  function getSalesData(){
-      var url = '/analytics/sales/data/'
-      var method = 'GET'
-      var data = {}
-      $.ajax({
-          url: url,
-          method: method,
-          data:data,
-          success: function(responseData){
-            renderChart("myChart", responseData.values, responseData.labels)
-              // renderChart(id, responseData.data, responseData.labels)
-          }, error: function(error){
-              $.alert("An error occurred")
-          }
-      })
-  }
-})
-function renderChart(id, data, labels){
-    // var ctx = document.getElementById("myChart").getContext('2d');
-    var ctx = $('#' + id)
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Sales',
-                    data: data,
-                   backgroundColor: 'rgba(0, 158, 29, 0.45)',
-                    borderColor:'rgba(0, 158, 29, 1)',
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                },
-                backgroundColor: 'rgba(75, 192, 192, 1)'
-            }
-        });
-}
-</script>
 {% endblock %}
 {% block content %}
+
 <div class="row my-5">
+  <form>
+    <select style="overflow:auto" class='period'>
+         <option value='all'>All</option>
+         <option value='1week'>1 week</option>
+         <option value='1month'>1 month</option>
+         <option value='1year'>1 year</option>
+    </select>
+</form>
+  <div class="col-12">
+    <canvas id="myChart"></canvas>
+  </div>
   <div class="col-4">
     <h3>Total: ${{ order_total_amount.total__sum }}</h3>
     <table class="table">
@@ -122,8 +86,6 @@ function renderChart(id, data, labels){
     </tbody>
   </table>
   </div>
-  <div class="col-12">
-    <canvas id="myChart"></canvas>
-  </div>
+
 </div>
 {% endblock %}

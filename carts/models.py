@@ -2,8 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save, post_save, m2m_changed
 from decimal import *
-
 from products.models import Product
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -79,10 +79,17 @@ def cart_m2m_changed(sender, instance, action, *args, **kwargs):
 
 m2m_changed.connect(cart_m2m_changed, sender=Cart.products.through)
 
-
-
-
 def cart_pre_save(sender, instance, *args, **kwargs):
 	instance.total = round(Decimal(instance.subtotal)*Decimal(1.1),2)
 
 pre_save.connect(cart_pre_save, sender=Cart)
+
+
+class Entry(models.Model):
+    cart		= models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product		= models.ForeignKey(Product, on_delete=models.CASCADE)
+    area		= models.DecimalField(default=0.00, max_digits=11, decimal_places=2)
+    packs       = models.IntegerField(default=50)
+    total		= models.DecimalField(default=0.00, max_digits=11, decimal_places=2)
+    updated		= models.DateTimeField(auto_now=True)
+    timestamp	= models.DateTimeField(auto_now_add=True)

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
-from .models import Cart
+from .models import Cart, Entry
 from products.models import Product
 from orders.models import Order
 from accounts.forms import LoginForm, GuestForm
@@ -28,6 +28,12 @@ def cart_page(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	return render(request, "carts/home.html", {'carts':cart_obj})
 
+def updateCart(request, id):
+	product = Product.objects.get(id=id)
+	cart_obj, new_obj = Cart.objects.new_or_get(request)
+	if cart_obj is not None:
+        Entry.objects.create(cart=cart_obj, product=product)
+    return redirect("carts:cart")
 
 def cart_update(request):
 	product_id = request.POST.get('product_id')
