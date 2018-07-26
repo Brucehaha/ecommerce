@@ -50,9 +50,7 @@ class OrderManager(models.Manager):
             older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
             if older_order_qs.exists():
                 older_order_qs.update(active=False)
-            obj = self.model.objects.create(
-                        billing_profile=billing_profile,
-                        cart=cart_obj)
+            obj = self.model.objects.create(billing_profile=billing_profile,cart=cart_obj)
             new_obj = True
         return obj, new_obj
     def list_order(self, billing_profile):
