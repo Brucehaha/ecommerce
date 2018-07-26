@@ -46,10 +46,10 @@ class OrderManager(models.Manager):
             obj = qs.first()
             new_obj = False
         else:
-            # get rid of the olde order and create the new order --->the following code has been moved to the order manager
-            # older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
-            # if older_order_qs.exists():
-            #     older_order_qs.update(active=False)
+            # get rid of the old order and create the new order
+            older_order_qs = Order.objects.exclude(billing_profile=billing_profile).filter(cart=cart_obj, active=True)
+            if older_order_qs.exists():
+                older_order_qs.update(active=False)
             obj = self.model.objects.create(
                         billing_profile=billing_profile,
                         cart=cart_obj)
