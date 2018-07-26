@@ -101,11 +101,11 @@ def check_out(request):
 				billing_profile.deactivate_card()
 			try:
 				##delete session card id after check_ou
-				del request.session['cart_id']
-				##delete cart no. with remove cart items.
-				del request.session['cart_items']
-				## delete the session of guest email check out
-				del request.session['guest_email_id']
+				del request.session['cart_items','cart_id', 'guest_email_id']
+				# ##delete cart no. with remove cart items.
+				# del request.session['cart_items']
+				# ## delete the session of guest email check out
+				# del request.session['guest_email_id']
 			except KeyError:
 				pass
 
