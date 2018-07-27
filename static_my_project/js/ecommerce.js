@@ -82,7 +82,7 @@ $(document).ready(function(){
     searchFormBtn.html('<i  class="fa fa-spinner fa-spin"></i>Search...')
   }
 
-
+// Cart part start------------------------------------------------------
 
 // cart update button js
   var productForm = $(".form-product-ajax")
@@ -94,7 +94,7 @@ $(document).ready(function(){
     var actionEndpoint = thisForm.attr("data-endpoint"); //api endpoint
     var httpMethod = thisForm.attr("method");
     var formData = thisForm.serialize();
-    // console.log(formData)
+    console.log("serilize"+formData)
 
 
     $.ajax({

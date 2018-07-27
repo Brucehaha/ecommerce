@@ -13,36 +13,36 @@ import pandas as pd
 
 
 import datetime
-class SalesAjaxView(View):
-    def get(self,request, *args, **kwargs):
-        data = {}
-        qs = cache.get('qs')
-        d_one_week= timezone.now()-timedelta(weeks=1)
-        d_one_month= timezone.now()-relativedelta(month=1)
-        d_one_year= timezone.now()-timedelta(days=365)
-
-        if qs is None:
-            qs = Order.objects.all().not_created().values('timestamp','total')
-            cache.set('qs', qs, 1800)
-# evaluate queryset, then cache the queryset
-        df = pd.DataFrame.from_records(qs)
-        type = request.GET.get("type")
-        print(type)
-        if type == "1week":
-            df3 = df[(df['timestamp'] > d_one_week)]
-            print(df3)
-        if type == "1month":
-            df3 = df[(df['timestamp'] > d_one_month)]
-        if type == "1year":
-            df3 = df[(df['timestamp'] > d_one_year)]
-        if type == "all":
-            df3 = df
-        df2=df3.set_index('timestamp')
-        df2=df2.groupby(df2.index.date).sum()
-        # data=df2.to_dict(orient='dict')
-        data['labels'] = [x.strftime("%b/%d") for x in df2.index]
-        data['values']=list(df2.total.values)
-        return JsonResponse(data)
+# class SalesAjaxView(View):
+#     def get(self,request, *args, **kwargs):
+#         data = {}
+#         qs = cache.get('qs')
+#         d_one_week= timezone.now()-timedelta(weeks=1)
+#         d_one_month= timezone.now()-relativedelta(month=1)
+#         d_one_year= timezone.now()-timedelta(days=365)
+#
+#         if qs is None:
+#             qs = Order.objects.all().not_created().values('timestamp','total')
+#             cache.set('qs', qs, 1800)
+# # evaluate queryset, then cache the queryset
+#         df = pd.DataFrame.from_records(qs)
+#         type = request.GET.get("type")
+#         print(type)
+#         if type == "1week":
+#             df3 = df[(df['timestamp'] > d_one_week)]
+#             print(df3)
+#         if type == "1month":
+#             df3 = df[(df['timestamp'] > d_one_month)]
+#         if type == "1year":
+#             df3 = df[(df['timestamp'] > d_one_year)]
+#         if type == "all":
+#             df3 = df
+#         df2=df3.set_index('timestamp')
+#         df2=df2.groupby(df2.index.date).sum()
+#         # data=df2.to_dict(orient='dict')
+#         data['labels'] = [x.strftime("%b/%d") for x in df2.index]
+#         data['values']=list(df2.total.values)
+#         return JsonResponse(data)
 # Create your views here.
 class SalesView(LoginRequiredMixin, TemplateView):
     template_name = 'analytics/sales.html'

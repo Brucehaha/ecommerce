@@ -17,6 +17,7 @@
               <th scope="row">{{ forloop.counter }}</th>
               <td>{{ product.title }}
                 {% include "products/snippets/remove-form.html" with product_id=product.id %}
+                {{ product.id }}
               </td>
               <td>{{ product.price}}</td>
             </tr>

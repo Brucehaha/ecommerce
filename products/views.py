@@ -44,7 +44,7 @@ class ProductFeaturedDetailView(DetailView):
 
 class ProductListView(ListView):
 	template_name  = "products/product_list.html"
-	paginate_by = 1
+	paginate_by = 9
 	def get_context_data(self, *args, **kwargs):
 		context = super().get_context_data(*args, **kwargs)
 		request = self.request

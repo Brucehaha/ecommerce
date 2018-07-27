@@ -10,6 +10,8 @@ from accounts.models import GuestEmail
 from addresses.forms import AddressForm
 from addresses.models import Address
 from django.conf import settings
+from django.forms import inlineformset_factory
+from .forms import CartFormSet
 import stripe
 
 
@@ -17,25 +19,62 @@ STRIPE_PUBLIC_KEY = getattr(settings, 'STRIPE_PUBLIC_KEY', 'pk_test_G1nt8Wx2P97t
 STRIPE_PRIVATE_KEY = getattr(settings, 'STRIPE_PRIVATE_KEY', 'sk_test_KRibT0JWeBwggF5iksBZ6y3j')
 stripe.api_key=STRIPE_PRIVATE_KEY
 
+
+# with intermediate table-----------------------------start
+# TEST FORMSET VIEW FOR ORDER---FAILD
+def home(request):
+    cart_obj, new_obj = Cart.objects.new_or_get(request)
+    CartInlineFormSet  = inlineformset_factory(Cart,Entry, fields=('cart','product', 'area', 'packs','total'))
+    if request.method == "POST":
+        formset = CartInlineFormSet(request.POST, instance=cart_obj)
+        if formset.is_valid():
+            formset.save()
+            # Do something. Should generally end with a redirect. For example:
+            return redirect('carts:home')
+    else:
+        formset = CartInlineFormSet(instance=cart_obj)
+    return render(request, 'carts/cart.html', {'formset': formset})
+# SUCESSFULL CREATED
+def cart_update(request):
+	product_id = request.POST.get('product_id')
+	product = Product.objects.get(id=product_id)
+	cart_obj, new_obj = Cart.objects.new_or_get(request)
+	if cart_obj is not None:
+		product_qs = Entry.objects.filter(cart=cart_obj, product=product)
+		if product_qs.exists():
+			product_obj = product_qs.first()
+			product_obj.delete()
+			added = False
+		else:
+			Entry.objects.create(cart=cart_obj, product=product)
+			added = True
+		if request.is_ajax():
+			json_data = {
+				"added": added,
+				"removed": not added,
+				"itemCount": cart_obj.products.count(),
+			}
+			return JsonResponse(json_data)
+		return redirect("carts:cart")
+# with intermediate table-----------------------------end
+
+# order cart without intermediate table---------------start
 def cart_refresh(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	products = cart_obj.products.all()
+
 	products_array = [{"url":x.get_absolute_url(), "name":x.title, "price":x.price, "id":x.id} for x in products]
 	return JsonResponse({"products": products_array,"subtotal":cart_obj.subtotal, "total":cart_obj.total})
 
 
 def cart_page(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
+	print(cart_obj.products.all())
 	return render(request, "carts/home.html", {'carts':cart_obj})
 
-def updateCart(request, id):
-	product = Product.objects.get(id=id)
-	cart_obj, new_obj = Cart.objects.new_or_get(request)
-	if cart_obj is not None:
-        Entry.objects.create(cart=cart_obj, product=product)
-    return redirect("carts:cart")
 
-def cart_update(request):
+
+def cart_update_old_remove(request):
 	product_id = request.POST.get('product_id')
 	product = Product.objects.get(id=product_id)
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
@@ -56,6 +95,7 @@ def cart_update(request):
 			}
 			return JsonResponse(json_data)
 		return redirect("carts:cart")
+# order cart without intermediate table---------------end
 
 
 def check_out(request):
