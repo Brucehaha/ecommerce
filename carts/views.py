@@ -22,18 +22,7 @@ stripe.api_key=STRIPE_PRIVATE_KEY
 
 # with intermediate table-----------------------------start
 # TEST FORMSET VIEW FOR ORDER---FAILD
-def home(request):
-    cart_obj, new_obj = Cart.objects.new_or_get(request)
-    CartInlineFormSet  = inlineformset_factory(Cart,Entry, fields=('cart','product', 'area', 'packs','total'))
-    if request.method == "POST":
-        formset = CartInlineFormSet(request.POST, instance=cart_obj)
-        if formset.is_valid():
-            formset.save()
-            # Do something. Should generally end with a redirect. For example:
-            return redirect('carts:home')
-    else:
-        formset = CartInlineFormSet(instance=cart_obj)
-    return render(request, 'carts/cart.html', {'formset': formset})
+
 # SUCESSFULL CREATED
 def cart_update(request):
 	product_id = request.POST.get('product_id')
@@ -55,7 +44,7 @@ def cart_update(request):
 				"itemCount": cart_obj.products.count(),
 			}
 			return JsonResponse(json_data)
-		return redirect("carts:cart")
+		return redirect("cart:home")
 # with intermediate table-----------------------------end
 
 # order cart without intermediate table---------------start
@@ -70,10 +59,10 @@ def cart_refresh(request):
 def cart_page(request):
 	cart_obj, new_obj = Cart.objects.new_or_get(request)
 	print(cart_obj.products.all())
-	return render(request, "carts/home.html", {'carts':cart_obj})
+	return render(request, "carts/home.html", {'cart':cart_obj})
 
 
-
+# has been disabled
 def cart_update_old_remove(request):
 	product_id = request.POST.get('product_id')
 	product = Product.objects.get(id=product_id)
