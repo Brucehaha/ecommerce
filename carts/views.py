@@ -61,6 +61,11 @@ def cart_page(request):
 	print(cart_obj.products.all())
 	return render(request, "carts/home.html", {'cart':cart_obj})
 
+# def cart_page(request):
+# 	cart_obj, new_obj = Cart.objects.new_or_get(request)
+# 	entrys = Entry.objects.filter(cart=cart_obj)
+# 	return render(request, "carts/home.html", {'cart':cart_obj, "entrys":entrys})
+
 
 # has been disabled
 def cart_update_old_remove(request):

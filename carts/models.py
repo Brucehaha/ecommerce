@@ -77,8 +77,10 @@ class Cart(models.Model):
 # 		instance.subtotal = total
 # 		instance.save()
 #
-# m2m_changed.connect(cart_m2m_changed, sender=Cart.products.through)
-#
+# # m2m_changed.connect(cart_m2m_changed, sender=Cart.products.through)
+# def cart_post_save(sender, instance, created, *args, **kwargs):
+#     if created:
+#         entry.cart.subtotal
 # def cart_pre_save(sender, instance, *args, **kwargs):
 # 	instance.total = round(Decimal(instance.subtotal)*Decimal(1.1),2)
 #
@@ -88,8 +90,12 @@ class Cart(models.Model):
 class Entry(models.Model):
     cart		= models.ForeignKey(Cart, on_delete=models.CASCADE)
     product		= models.ForeignKey(Product, on_delete=models.CASCADE)
-    area		= models.DecimalField(default=0.00, max_digits=11, decimal_places=2)
-    packs       = models.IntegerField(default=50)
+    area		= models.DecimalField(default=100, max_digits=11, decimal_places=2)
+    packs       = models.IntegerField(default=100)
     total		= models.DecimalField(default=0.00, max_digits=11, decimal_places=2)
     updated		= models.DateTimeField(auto_now=True)
     timestamp	= models.DateTimeField(auto_now_add=True)
+
+
+# def entry_pre_post(sender, instance, *args, **kwargs):
+#     instance.total
