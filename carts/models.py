@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import pre_save, post_save, m2m_changed
+from django.db.models.signals import pre_save, post_save, post_delete
 from decimal import *
 from products.models import Product
 
@@ -97,5 +97,36 @@ class Entry(models.Model):
     timestamp	= models.DateTimeField(auto_now_add=True)
 
 
-# def entry_pre_post(sender, instance, *args, **kwargs):
-#     instance.total
+def entry_pre_save(sender, instance, *args, **kwargs):
+    price = instance.product.price
+    size = instance.product.size
+    packs = instance.packs
+    area = round(size*Decimal(packs),2)
+    total = round(area*price,2)
+    instance.area = area
+    instance.total = total
+
+pre_save.connect(entry_pre_save, sender=Entry)
+
+def entry_post_save(sender, instance, created, *args, **kwargs):
+    if created:
+        cart_obj = instance.cart
+        subtotal = 0
+        for entry in cart_obj.entry_set.all():
+            subtotal += entry.total
+        cart_obj.subtotal = subtotal
+        cart_obj.total = round(subtotal*Decimal(1.1),2)
+        cart_obj.save()
+
+post_save.connect(entry_post_save, sender=Entry)
+
+def entry_post_delete(sender, instance, *args, **kwargs):
+    cart_obj = instance.cart
+    subtotal = 0
+    for entry in cart_obj.entry_set.all():
+        subtotal += entry.total
+    cart_obj.subtotal = subtotal
+    cart_obj.total = round(subtotal*Decimal(1.1),2)
+    cart_obj.save()
+
+post_delete.connect(entry_post_delete, sender=Entry)

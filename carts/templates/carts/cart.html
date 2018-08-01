@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Cart</h1>
+ <div class="row">
+     <form method="post">
+         {% csrf_token %}
+
+         {{ formset.management_form }}
+           {% for form in formset %}
+                   {{ form }}
+                   {% endfor%}
+                   <input class="btn btn-primary" type="submit" value="Update"/>
+
+
+     </form>
+</div>
+
+{% endblock %}

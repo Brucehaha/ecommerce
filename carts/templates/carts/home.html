@@ -15,20 +15,23 @@
           </tr>
         </thead>
         <tbody class="cartBody">
-          {% for entry in cart.entry_set.all %}
-            <tr class="cartList">
-              <th scope="row">{{ forloop.counter }}</th>
-              <td>{{ entry.product.title }}
-                {% include "products/snippets/remove-form.html" with product_id=entry.product.id %}
-                {{ entry.product.id }}
-              </td>
-              <td>{{ entry.product.price}}</td>
-              <td>{{ entry.packs }}</td>
-              <td>{{ entry.area }}</td>
-              <td>{{ entry.total }}</td>
 
 
-            </tr>
+              {% for entry in cart.entry_set.all %}
+
+                <tr class="cartList">
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td>{{ entry.product.title }}
+                    {% include "products/snippets/remove-form.html" with product_id=entry.product.id %}
+                    {{ entry.product.id }}
+                  </td>
+                  <td>{{ entry.product.price}}</td>
+                  <td>{{ entry.packs}}
+                  </td>
+                  <td>{{ entry.area }}</td>
+                  <td>{{ entry.total }}</td>
+                </tr>
+    
             {% endfor %}
 
         </tbody>
@@ -45,11 +48,12 @@
 						<td colspan="1"><span class="total"> {{ cart.total }}</span></td>
 
           </tr>
+
+
             <tr>
             <th scope="row"></th>
 
 						<td colspan="1">
-
 						</td>
 						<td colspan="1">
 							<form action='{% url "cart:checkout" %}'>
