@@ -2,18 +2,72 @@
 
 {% block content %}
 <h1>Cart</h1>
- <div class="row">
-     <form method="post">
-         {% csrf_token %}
+{% if formset.forms %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Packs</th>
+            <th scope="col">Area</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Remove?</th>
 
-         {{ formset.management_form }}
-           {% for form in formset %}
-                   {{ form }}
-                   {% endfor%}
-                   <input class="btn btn-primary" type="submit" value="Update"/>
+          </tr>
+        </thead>
+        <form method='post'  action='{% url "cart:entry" %}'>
+            {% csrf_token %}
+        <tbody class="cartBody">
+            {{ formset.management_form }}
+                {% for form in formset %}
+                <tr class="cartList">
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td>{{ form.instance.product }}
+                  </td>
+                  <td>{{ form.instance.product.price}}</td>
+                  <td> {{ form.id }}{{ form.packs }} </td>
 
+                  <td>{{ form.instance.area }}</td>
+                  <td>{{ form.instance.total }}</td>
+                  <td>{{ form.DELETE }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tbody>
+          <tr>
+            <th scope="row"></th>
+            <td colspan="1"><b>Subtotal</b> </span></td>
+						<td colspan="1"> <span class="subtotal">{{ cart.subtotal }}</span></td>
+          </tr>
+          <tr>
+            <th scope="row"></th>
+						<td colspan="1"><b>Total(incl.GST)</b></td>
+						<td colspan="1"><span class="total"> {{ cart.total }}</span></td>
 
-     </form>
-</div>
+          </tr>
+            <tr>
+            <th scope="row"></th>
+
+						<td colspan="1">
+                            <input class="btn btn-primary" type="submit" value="Update Cart">
+
+						</td>
+        </form>
+						<td colspan="1">
+							<form action='{% url "cart:checkout" %}'>
+								<input class="btn btn-primary" type="submit" value="Checkout">
+							</form>
+						</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+{% else %}
+    <p>Cart is empty</p>
+  {% endif %}
+
 
 {% endblock %}

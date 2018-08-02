@@ -31,18 +31,8 @@ def entry_update(request):
         if formset.is_valid():
             formset.save()
             return redirect("cart:entry")
-    return render(request, 'carts/cart.html', {'formset': formset})
+    return render(request, 'carts/cart.html', {'formset': formset, "cart":cart_obj})
 
-# def entry_update(request):
-#     cart_obj, new_obj = Cart.objects.new_or_get(request)
-#     formset = EntryFormSet(queryset=cart_obj.entry_set.all())
-#     if request.method == 'POST':
-#         formset = EntryFormSet(request.POST,
-#                                queryset=cart_obj.entry_set.all())
-#         if formset.is_valid():
-#             formset.save()
-#             return redirect("cart:entry")
-#     return render(request, 'carts/home.html', {'formset': formset})
 
 # SUCESSFULL CREATED
 def cart_update(request):
@@ -79,13 +69,7 @@ def cart_refresh(request):
 
 def cart_page(request):
     cart_obj, new_obj = Cart.objects.new_or_get(request)
-
     return render(request, "carts/home.html", {'cart':cart_obj })
-
-# def cart_page(request):
-#     cart_obj, new_obj = Cart.objects.new_or_get(request)
-#     entrys = Entry.objects.filter(cart=cart_obj)
-#     return render(request, "carts/home.html", {'cart':cart_obj, "entrys":entrys})
 
 
 # has been disabled
@@ -109,7 +93,7 @@ def cart_update_old_remove(request):
                 "itemCount": cart_obj.products.count(),
             }
             return JsonResponse(json_data)
-        return redirect("carts:cart")
+        return redirect("cart:entry")
 # order cart without intermediate table---------------end
 
 
@@ -124,7 +108,7 @@ def check_out(request):
     address_qs = None
 
     if new_cart or cart_obj.products.count() == 0:
-        return redirect("carts:cart")
+        return redirect("cart:entry")
     else:
         pass
 
@@ -170,7 +154,7 @@ def check_out(request):
                 except KeyError:
                     pass
 
-            return redirect("carts:success")
+            return redirect("cart:success")
 
     context={
         "order_obj" : order_obj,

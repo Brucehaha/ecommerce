@@ -17,6 +17,7 @@ class CartManager(models.Manager):
 		if qs.count() == 1:
 			new_object = False
 			cart_obj = qs.first()
+			request.session['cart_items'] = cart_obj.products.count()
 			if  cart_obj.user is None:
 				if request.user.is_authenticated:
 					cart_obj.user = request.user

@@ -10,4 +10,4 @@ class EntryForm(ModelForm):
 
 EntryFormSet = modelformset_factory(Entry, form=EntryForm)
 
-inlineFormSet = inlineformset_factory(Cart, Entry, form=EntryForm, extra=0 ,can_delete=False)
+inlineFormSet = inlineformset_factory(Cart, Entry, form=EntryForm, extra=0 ,can_delete=True)

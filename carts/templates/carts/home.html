@@ -31,7 +31,7 @@
                   <td>{{ entry.area }}</td>
                   <td>{{ entry.total }}</td>
                 </tr>
-    
+
             {% endfor %}
 
         </tbody>
@@ -52,20 +52,14 @@
 
             <tr>
             <th scope="row"></th>
-
-						<td colspan="1">
-						</td>
-						<td colspan="1">
-							<form action='{% url "cart:checkout" %}'>
-								<input class="btn btn-primary" type="submit" value="Checkout">
-							</form>
-						</td>
-
-
-
+				<td colspan="1">
+				</td>
+				<td colspan="1">
+					<form action='{% url "cart:checkout" %}'>
+						<input class="btn btn-primary" type="submit" value="Checkout">
+					</form>
+				</td>
           </tr>
-
-
         </tbody>
       </table>
 
