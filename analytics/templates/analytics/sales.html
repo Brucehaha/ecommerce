@@ -1,91 +1,107 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block js %}
+<script src='{% static "js/ecommerce.sales.js" %}'></script>
 {% endblock %}
+
 {% block content %}
 
-<div class="row my-5">
-  <form>
-    <select style="overflow:auto" class='period'>
-         <option value='all'>All</option>
-         <option value='1week'>1 week</option>
-         <option value='1month'>1 month</option>
-         <option value='1year'>1 year</option>
-    </select>
-</form>
-  <div class="col-12">
-    <canvas id="myChart"></canvas>
-  </div>
-  <div class="col-4">
-    <h3>Total: ${{ order_total_amount.total__sum }}</h3>
-    <table class="table">
-      <thead class="thead">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Order No.</th>
-          <th scope="col">Amount$</th>
-          <th scope="col">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for q in order_total %}
-        <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ q.order_id }}</td>
-          <td>{{ q.total }}</td>
-          <td>{{ q.timestamp|date:"Y/m/d" }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
 
-  </div>
+
+
+  <div class="row my-5">
   <div class="col-4">
-    <h3>Paid: ${{ order_paid_amount.total__sum }}</h3>
-    <table class="table">
-      <thead class="thead">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Order No.</th>
-          <th scope="col">Amount$</th>
-          <th scope="col">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for q in order_paid %}
-        <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ q.order_id }}</td>
-          <td>{{ q.total }}</td>
-          <td>{{ q.timestamp|date:"Y/m/d" }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <div class="col-4">
-    <h3>Shipped: ${{ order_shipped_amount.total__sum }}</h3>
-    <table class="table">
-    <thead class="thead">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Order No.</th>
-        <th scope="col">Amount$</th>
-        <th scope="col">Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for q in order_shipped %}
-      <tr>
-        <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ q.order_id }}</td>
-        <td>{{ q.total }}</td>
-        <td>{{ q.timestamp|date:"Y/m/d" }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
+
+      <div class="col-12">
+        <h3>Total: ${{ order_total_amount.total__sum }}</h3>
+        <table class="table">
+          <thead class="thead">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Amount$</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for q in order_total %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ q.order_id }}</td>
+              <td>{{ q.total }}</td>
+              <td>{{ q.timestamp|date:"Y/m/d" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+      <div class="col-12">
+        <h3>Paid: ${{ order_paid_amount.total__sum }}</h3>
+        <table class="table">
+          <thead class="thead">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Amount$</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for q in order_paid %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ q.order_id }}</td>
+              <td>{{ q.total }}</td>
+              <td>{{ q.timestamp|date:"Y/m/d" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12">
+        <h3>Shipped: ${{ order_shipped_amount.total__sum }}</h3>
+        <table class="table">
+        <thead class="thead">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Order No.</th>
+            <th scope="col">Amount$</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for q in order_shipped %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ q.order_id }}</td>
+            <td>{{ q.total }}</td>
+            <td>{{ q.timestamp|date:"Y/m/d" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="col-8 ">
+      <form>
+        <select style="overflow:auto" class='period'>
+             <option value='all'>All</option>
+             <option value='1week'>1 week</option>
+             <option value='1month'>1 month</option>
+             <option value='1year'>1 year</option>
+        </select>
+    </form>
+
+
+
+      <div class="col-12">
+        <canvas id="myChart"></canvas>
+      </div>
+
+      </div>
 
 </div>
 {% endblock %}

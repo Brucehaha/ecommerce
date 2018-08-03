@@ -21,10 +21,12 @@ ORDER_STATUS_CHOICES=(
     ('paid', 'Paid'),
     ('shipped', 'Shipped'),
     ('refund', 'refund'),
-
-
     )
-
+PAYMENT_CHOICE = (
+    ('card', 'Card'),
+    ('cash', 'Cash'),
+    ('BSB'， 'BSB')
+)
 class OrderManagerQuerySet(models.query.QuerySet):
     def not_created(self):
         return self.exclude(status='created')
