@@ -25,7 +25,7 @@ ORDER_STATUS_CHOICES=(
 PAYMENT_CHOICE = (
     ('card', 'Card'),
     ('cash', 'Cash'),
-    ('BSB'， 'BSB')
+    ('BSB', 'BSB')
 )
 class OrderManagerQuerySet(models.query.QuerySet):
     def not_created(self):
