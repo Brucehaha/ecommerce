@@ -28,6 +28,8 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('guest/', GuestRegisterView.as_view(), name='guest_register'),
 
+    ##retailers
+    path('retailers/', include('retailers.urls', namespace='retailers')),
     ##accounts app
     path('account/', include('accounts.urls', namespace='account')),
     path('accounts/', RedirectView.as_view(url='/account')),

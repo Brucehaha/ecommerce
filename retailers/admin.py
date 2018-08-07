@@ -12,7 +12,7 @@ class RetailerAdmin(admin.ModelAdmin):
 
 class SampleAdmin(admin.ModelAdmin):
     inlines =(SampleBridgeInline,)
-    list_display = ('title','price', 'image','active')
+    list_display = ('title','price','active')
 
 
 

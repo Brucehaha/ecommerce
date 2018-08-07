@@ -38,10 +38,9 @@ class Sample(models.Model):
     active          = models.BooleanField(default=True)
     timestamp       = models.DateTimeField(auto_now_add=True)
 
-    def image_tag(self):
-        return u'<img src="%s" />'%self.image
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
+    def __str__(self):
+        return self.title
+
 
 def sample_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -55,6 +54,8 @@ class Retailer(models.Model):
     email           = models.EmailField(verbose_name='email address',max_length=255)
     sample          = models.ManyToManyField(Sample, through='SampleBridge', blank=True)
     business_name   = models.CharField(max_length=255, blank=True, null=True)
+    latitude        = models.DecimalField(decimal_places=15,max_digits=20, default=0)
+    longitude       = models.DecimalField(decimal_places=15,max_digits=20, default=0)
     first_name      = models.CharField(verbose_name='first name', max_length=30, blank=True)
     last_name       = models.CharField(verbose_name='last name', max_length=30, blank=True)
     phone_regex     = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
