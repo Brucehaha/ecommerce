@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
+  <script>
+      $('.sample-form').formset({
+          addText: 'add answer',
+          deleteText: 'remove'
+      });
+  </script>
+
+{% endblock %}
+{% block content %}
+	<div class='container'>
+        <h1> {{ form.instance.business_name|default:"Create a new Business"}}</h1>
+        <form method="POST" action="">
+        {% csrf_token %}
+         {% for field in form %}
+         <div class="form-group">
+             {{ field.label }}
+             {{ field }}
+         </div>
+
+         {% endfor %}
+        {{ formset.management_form }}
+
+        <table role="grid" class="stack hover" style="width: 100%">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center" style="width: 10%">Sample</th>
+                    <th scope="col" class="text-center">Number</th>
+                    <th scope="col" class="text-center" style="width: 10%">Delete?</th>
+                </tr>
+            </thead>
+            <tbody class="order">
+                {% for form in formset %}
+                {{ form.id }}
+                <div class="{{ form.prefix }}">
+                    <tr class="sample-form {% if form.instance.pk %}item{% else %}new{% endif %}">
+                        <td scope="col" class="text-center">{{ form.sample }}</td>
+                        <td scope="col" class="text-center">{{ form.number }}</td>
+                        {% if form.instance.pk %}
+                            <td class="text-center">{{ form.DELETE }}</td>
+                        {% else %}
+                            <td class="text-center"></td>
+                        {% endif %}
+                    </tr>
+             </div>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <input type="submit" class="button btn btn-primary my-5" value="Create">
+    </form>
+	</div>
+
+
+
+
+
+
+{% endblock %}
