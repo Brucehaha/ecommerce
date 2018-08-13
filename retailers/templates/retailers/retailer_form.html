@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block title %}
+    {{ form.instance.business_name|default:"Create a new retailer" }}
+{% endblock %}
 {% block js %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
   <script>
@@ -9,6 +12,7 @@
   </script>
 
 {% endblock %}
+
 {% block content %}
 	<div class='container'>
         <h1> {{ form.instance.business_name|default:"Create a new Business"}}</h1>

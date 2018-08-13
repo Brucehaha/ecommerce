@@ -9,6 +9,18 @@ class RetailerListView(ListView):
     model = models.Retailer
     template_name = "retailers/retailer_list.html"
 
+def RemoveRetailer(request):
+    if request.method == 'POST':
+        i=0
+        for item in request.POST:
+            if request.POST.get(item) and i is not 0:
+                retailer = models.Retailer.objects.filter(pk=item)
+                if retailer.exists():
+                    retailer.delete()
+            i+=1
+    return redirect("retailers:list")
+
+
 
 def create_retailer(request):
     form_class = forms.RetailerForm
@@ -119,5 +131,5 @@ def edit_retailer(request, retailer_pk):
         return redirect("retailers:list")
     return render(request, 'retailers/retailer_form.html', {
         'form': form,
-        'formset':sample_forms
+        'formset':sample_forms,
         })

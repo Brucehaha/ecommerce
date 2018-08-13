@@ -26,6 +26,14 @@ class SampleBridgeForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control input-sm'
 
+retailerFormSet = forms.modelformset_factory(
+    Retailer,
+    form = RetailerForm,
+    fields=('business_name', 'phone_number','email'),
+    extra=0,
+    can_delete=True,
+)
+
 SampleBridgeFormSet = forms.modelformset_factory(
     SampleBridge,
     form = SampleBridgeForm,
@@ -42,3 +50,6 @@ SampleBridgeInlineFormSet = forms.inlineformset_factory(
     extra=2,
 
 )
+
+class DeleteForm(forms.Form):
+    delete = forms.BooleanField(required=False)

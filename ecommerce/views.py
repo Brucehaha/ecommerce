@@ -5,7 +5,7 @@ from .forms import ContactForm
 
 def home_page(request):
 	context = {
-		"title": "hi world",
+		"title": "eflooring",
 		"content": "Welcome to the home page"
 	}
 	if request.user.is_authenticated:

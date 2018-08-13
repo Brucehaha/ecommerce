@@ -4,7 +4,8 @@
 	<div class='container'>
 
 			<div class='mx-auto py-3'>
-
+                <form method='POST', action='{% url "retailers:api" %}'>
+                    {% csrf_token %}
                 <table class="table table-bordered">
                   <thead>
                     <tr>
@@ -20,14 +21,24 @@
                    {% for obj in object_list %}
                     <tr>
                       <th scope="row">{{ forloop.counter }}</th>
-                      <td>{{ obj.business_name }}</td>
+                      <td>
+                          <a href="{% url 'retailers:edit_retailer' retailer_pk=obj.pk %}">
+                              {{ obj.business_name }}
+                          </a>
+                      </td>
                       <td>{{ obj.phone_number }}</td>
                       <td>{{ obj.email }}</td>
                       <td>{{ obj.samplebridge_set.count }}</td>
+                      <td>
+                         {% include 'retailers/remove_form.html' with retailer_pk=obj.pk  %}
+                      </td>
                     </tr>
                     {% endfor %}
                   </tbody>
                 </table>
+                <input type="submit" class="btn btn-default" value="Submit"/>
+
+            </form>
 			</div>
 
 		</div>
