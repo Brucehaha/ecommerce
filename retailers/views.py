@@ -13,10 +13,11 @@ def RemoveRetailer(request):
     if request.method == 'POST':
         i=0
         for item in request.POST:
+            print(item)
             if request.POST.get(item) and i is not 0:
                 retailer = models.Retailer.objects.filter(pk=item)
                 if retailer.exists():
-                    retailer.delete()
+                    retailer.first().delete()
             i+=1
     return redirect("retailers:list")
 
@@ -127,7 +128,7 @@ def edit_retailer(request, retailer_pk):
             sample.save()
         for sample in sample_forms.deleted_objects:
             answer.delete()
-        messages.success(request, "Added Retailer")
+        messages.success(request, "Retailder modified")
         return redirect("retailers:list")
     return render(request, 'retailers/retailer_form.html', {
         'form': form,
