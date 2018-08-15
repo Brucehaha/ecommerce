@@ -72,3 +72,6 @@ class SampleBridge(models.Model):
     number      = models.IntegerField(default=1)
     updated		= models.DateTimeField(auto_now=True)
     timestamp	= models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.sample

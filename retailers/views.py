@@ -4,6 +4,8 @@ from django.views.generic import ListView
 from . import forms
 from . import models
 
+def RetailerMap(request):
+    return render(request, "retailers/map.html", {})
 
 class RetailerListView(ListView):
     model = models.Retailer
