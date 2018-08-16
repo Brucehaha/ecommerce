@@ -3,7 +3,7 @@ $( document ).ready(function() {
 
 var stripeFormModule = $(".stripe-payment-form")
 var stripeTemplate = $.templates("#stripeTemplate")
-var stripeFormToken = stripeFormModule.attr('public_token')
+var stripeFormToken = stripeFormModule.attr('public_token')||'test'
 var stripeFormNextUrl = stripeFormModule.attr('next_url')
 var stripeTemplateDataContext= {
   public_token:stripeFormToken,
@@ -18,7 +18,7 @@ const paymentForm = $(".payment-form")
 const paymentFormBtn = paymentForm.find("button")
 const next_url = paymentForm.attr("next_url")
 
-const public_token = paymentForm.attr("public_token");
+const public_token = paymentForm.attr("public_token")||'test';
 // A $( document ).ready() block.
 
 var stripe = Stripe(public_token);

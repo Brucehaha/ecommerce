@@ -1,5 +1,8 @@
 {% extends 'base.html'%}
-
+{% block js %}
+<script src='{% static "js/stripe.js" %}'></script>
+{% include 'base/stripe_js.html' %}
+{% endblock %}
 {% block content %}
 <!-- use JS render to reuse the payment form, therefore, stripe payment can be
 not only used in card.html as a single page, but stripe payment can be used in any

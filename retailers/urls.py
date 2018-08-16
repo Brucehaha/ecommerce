@@ -9,7 +9,8 @@ urlpatterns = [
     re_path(r'^create/$', views.create_retailer, name="create"),
     re_path(r'^edit_retailer/(?P<retailer_pk>\d+)/$', views.edit_retailer, name='edit_retailer'),
     re_path(r'^api/$', views.RemoveRetailer, name='api'),
-    path('map/', views.RetailerMap, name='map')
+    path('map/', views.RetailerMap, name='map'),
+    path('RetailerMapAjax/', views.RetailerMapAjax, name='RetailerMapAjax')
 
     # re_path(r'^(?P<slug>[\w-]+)/$', ProductDetailView.as_view(), name='detail'),
 

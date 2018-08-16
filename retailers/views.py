@@ -1,11 +1,26 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.http import JsonResponse
 from django.views.generic import ListView
 from . import forms
 from . import models
 
 def RetailerMap(request):
     return render(request, "retailers/map.html", {})
+
+def RetailerMapAjax(request):
+    # data = {}
+    # if request.is_ajax():
+    retailers = models.Retailer.objects.all()
+    data = {
+        "business":[{
+            "location":[x.latitude, x.longitude],
+            "name":x.business_name,
+            "count":x.samplebridge_set.count(),
+            "samples":[i.sample.title for i in x.samplebridge_set.all()],
+            } for x in retailers]
+    }
+    return JsonResponse(data)
 
 class RetailerListView(ListView):
     model = models.Retailer

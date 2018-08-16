@@ -90,3 +90,7 @@
 </div>
 
 {% endblock %}
+{% block js %}
+<script src='{% static "js/stripe.js" %}'></script>
+{% include 'base/stripe_js.html' %}
+{% endblock %}
