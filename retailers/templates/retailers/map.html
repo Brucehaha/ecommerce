@@ -49,7 +49,7 @@ const renderMap = (business) => {
     var mymap = L.map('mapid', {
         center: [-37.8136, 144.9631],
         zoom: 10,
-        layers: [grayscale, cities],
+        layers: [grayscale, Melbourne],
         attributionControl: false,
     });
 
@@ -59,7 +59,7 @@ const renderMap = (business) => {
     };
     //
     var overlayMaps = {
-        "Cities": cities
+        "Cities": Melbourne
     };
 
     L.control.layers(baseMaps, overlayMaps).addTo(mymap);
