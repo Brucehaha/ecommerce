@@ -16,7 +16,6 @@ def read_env(path):
 
     for line in content.splitlines():
         m1 = re.match(r'\A([A-Za-z_0-9]+)=(.*)\Z', line)
-        print("good try")
         if m1:
             key, val = m1.group(1), m1.group(2)
             m2 = re.match(r"\A'(.*)'\Z", val)
