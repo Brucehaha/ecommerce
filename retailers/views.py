@@ -67,32 +67,6 @@ def create_retailer(request):
         })
 
 
-def create_retailer(request):
-    form_class = forms.RetailerForm
-    sample_forms = forms.SampleBridgeFormSet(
-        queryset = models.SampleBridge.objects.none()
-    )
-    form = form_class()
-    if request.method == 'POST':
-        form = form_class(request.POST)
-        sample_forms = forms.SampleBridgeFormSet(
-            request.POST,
-            queryset = models.SampleBridge.objects.none()
-        )
-
-    if form.is_valid() and sample_forms.is_valid():
-        retailer = form.save()
-        samples = sample_forms.save(commit=False)
-        for sample in samples:
-            sample.retailer = retailer
-            sample.save()
-            messages.success(request, "Added Retailer")
-            return redirect("retailers:list")
-    return render(request, 'retailers/retailer_form.html', {
-        'form': form,
-        'formset':sample_forms
-        })
-
 
 def create_retailer(request):
     form_class = forms.RetailerForm
@@ -144,7 +118,7 @@ def edit_retailer(request, retailer_pk):
             sample.retailer = retailer
             sample.save()
         for sample in sample_forms.deleted_objects:
-            answer.delete()
+            sample.delete()
         messages.success(request, "Retailder modified")
         return redirect("retailers:list")
     return render(request, 'retailers/retailer_form.html', {

@@ -4,26 +4,21 @@ from itertools import chain
 from django.utils.html import conditional_escape
 from django.utils.encoding import force_text
 
-# class DataList(forms.TextInput):
-#     def __init__(self, attrs=None, choices=()):
-#         super(DataList, self).__init__(attrs)
-#         self.choices = list(choices)
-#
-#     def render(self, name, value, attrs={}, choices=()):
-#         attrs['list'] = u'id_%s_list' % name
-#         output = super(DataList, self).render(name, value, attrs)
-#         output += u'\n' + self.render_options(name, choices)
-#         return output
-#
-#     def render_options(self, name, choices):
-#         output = []
-#         output.append(u'<datalist id="id_%s_list" style="display:none">' % name)
-#         output.append(u'<select name="%s_select"' % name)
-#         for option in chain(self.choices, choices):
-#             output.append(u'<option value="%s" />' % conditional_escape(force_text(option)))
-#         output.append(u'</select>')
-#         output.append(u'</datalist>')
-#         return u'\n'.join(output)
+
+# def unique_field_formset(field_name):
+#     from django.forms.models import BaseInlineFormSet
+#     class UniqueFieldFormSet (BaseInlineFormSet):
+#         def clean(self):
+#             if any(self.errors):
+#             # Don't bother validating the formset unless each form is valid on its own
+#                 return
+#             values = set()
+#             for form in self.forms:
+#                 value = form.cleaned_data[field_name]
+#                 if value in values:
+#                     raise forms.ValidationError('Duplicate values for "%s" are not allowed.' % field_name)
+#                 values.add(value)
+#     return UniqueFieldFormSet
 
 class RetailerForm(forms.ModelForm):
     class Meta:
@@ -37,6 +32,7 @@ class RetailerForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control input-sm'
 
+
 class SampleBridgeForm(forms.ModelForm):
     class Meta:
         model = SampleBridge
@@ -48,6 +44,7 @@ class SampleBridgeForm(forms.ModelForm):
         super(SampleBridgeForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control input-sm'
+
 
 retailerFormSet = forms.modelformset_factory(
     Retailer,
