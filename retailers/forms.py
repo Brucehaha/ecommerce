@@ -4,21 +4,21 @@ from itertools import chain
 from django.utils.html import conditional_escape
 from django.utils.encoding import force_text
 
+#
+# class UniqueFieldFormSet(forms.BaseInlineFormSet):
+#     def clean(self):
+#         super(UniqueFieldFormSet, self).clean()
+#         if any(self.errors):
+#         # Don't bother validating the formset unless each form is valid on its own
+#             return
+#         values = set()
+#         for form in self.forms:
+#             value = form.cleaned_data['sample']
+#             print(form.cleaned_data)
+#             if value in values:
+#                 raise forms.ValidationError('Duplicate values for "%s" are not allowed.' % value)
+#             values.add(value)
 
-# def unique_field_formset(field_name):
-#     from django.forms.models import BaseInlineFormSet
-#     class UniqueFieldFormSet (BaseInlineFormSet):
-#         def clean(self):
-#             if any(self.errors):
-#             # Don't bother validating the formset unless each form is valid on its own
-#                 return
-#             values = set()
-#             for form in self.forms:
-#                 value = form.cleaned_data[field_name]
-#                 if value in values:
-#                     raise forms.ValidationError('Duplicate values for "%s" are not allowed.' % field_name)
-#                 values.add(value)
-#     return UniqueFieldFormSet
 
 class RetailerForm(forms.ModelForm):
     class Meta:
@@ -57,6 +57,7 @@ retailerFormSet = forms.modelformset_factory(
 SampleBridgeFormSet = forms.modelformset_factory(
     SampleBridge,
     form = SampleBridgeForm,
+    # formset=UniqueFieldFormSet,
     fields=('sample', 'number'),
     extra=2,
 )

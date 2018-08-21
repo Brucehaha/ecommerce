@@ -98,25 +98,36 @@ def create_retailer(request):
 def edit_retailer(request, retailer_pk):
     retailer = get_object_or_404(models.Retailer, pk=retailer_pk)
     form_class = forms.RetailerForm
-
+    values = set()
     form = form_class(instance=retailer)
+    queryset = form.instance.samplebridge_set.all()
+    #fill in the exsiting value
+    for sample in queryset:
+        values.add(sample.sample)
+
     sample_forms = forms.SampleBridgeInlineFormSet(
-        queryset = form.instance.samplebridge_set.all()
+        queryset = queryset
     )
 
     if request.method == 'POST':
         form = form_class(request.POST, instance=retailer)
         sample_forms = forms.SampleBridgeInlineFormSet(
             request.POST,
-            queryset =form.instance.samplebridge_set.all()
+            queryset =queryset
         )
 
     if form.is_valid() and sample_forms.is_valid():
         form.save()
         samples = sample_forms.save(commit=False)
         for sample in samples:
+            # remove dupliated sample but not work for value existed
+            if sample.sample in values:
+                messages.success(request, "Duplicate sample removed")
+                break
             sample.retailer = retailer
             sample.save()
+            values.add(sample.sample)
+
         for sample in sample_forms.deleted_objects:
             sample.delete()
         messages.success(request, "Retailder modified")
