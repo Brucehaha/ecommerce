@@ -1,6 +1,6 @@
 from django import forms
 from .models import Retailer, SampleBridge,Sample
-from ecommerce.mixins import UniqueFieldFormSet
+from ecommerce.utils import UniqueFieldFormSet
 
 
 
