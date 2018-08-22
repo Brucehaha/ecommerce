@@ -14,7 +14,7 @@ from django.core.wsgi import get_wsgi_application
 '''set credential before application run on server, because applicaion do not
 run by manage.py anymore on server.
 '''
-read_env('.env')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings")
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings")
+read_env('.env')
 application = get_wsgi_application()
