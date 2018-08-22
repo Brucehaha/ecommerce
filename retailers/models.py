@@ -39,7 +39,7 @@ class Sample(models.Model):
     timestamp       = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
 
 def sample_pre_save_receiver(sender, instance, *args, **kwargs):

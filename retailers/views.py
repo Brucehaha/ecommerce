@@ -71,14 +71,18 @@ def create_retailer(request):
 def create_retailer(request):
     form_class = forms.RetailerForm
     sample_forms = forms.SampleBridgeInlineFormSet(
-        queryset = models.SampleBridge.objects.none()
+        queryset = models.SampleBridge.objects.none(),
+        request=request,
     )
     form = form_class()
     if request.method == 'POST':
         form = form_class(request.POST)
         sample_forms = forms.SampleBridgeInlineFormSet(
             request.POST,
-            queryset = models.SampleBridge.objects.none()
+            request=request,
+            queryset = models.SampleBridge.objects.none(),
+            field_value='sample',
+
         )
 
     if form.is_valid() and sample_forms.is_valid():
@@ -98,36 +102,28 @@ def create_retailer(request):
 def edit_retailer(request, retailer_pk):
     retailer = get_object_or_404(models.Retailer, pk=retailer_pk)
     form_class = forms.RetailerForm
-    values = set()
     form = form_class(instance=retailer)
     queryset = form.instance.samplebridge_set.all()
-    #fill in the exsiting value
-    for sample in queryset:
-        values.add(sample.sample)
-
     sample_forms = forms.SampleBridgeInlineFormSet(
-        queryset = queryset
+        queryset = queryset,
+
     )
 
     if request.method == 'POST':
         form = form_class(request.POST, instance=retailer)
         sample_forms = forms.SampleBridgeInlineFormSet(
             request.POST,
-            queryset =queryset
+            request=request,#  pass request to form clean method
+            queryset =queryset,
+            field_value='sample',
         )
 
     if form.is_valid() and sample_forms.is_valid():
         form.save()
         samples = sample_forms.save(commit=False)
         for sample in samples:
-            # remove dupliated sample but not work for value existed
-            if sample.sample in values:
-                messages.success(request, "Duplicate sample removed")
-                break
             sample.retailer = retailer
             sample.save()
-            values.add(sample.sample)
-
         for sample in sample_forms.deleted_objects:
             sample.delete()
         messages.success(request, "Retailder modified")
