@@ -77,4 +77,4 @@ class SampleBridge(models.Model):
     #     unique_together = (("sample", "retailer"),)
 
     def __str__(self):
-        return self.sample
+        return str(self.sample)
