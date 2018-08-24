@@ -1,10 +1,9 @@
 import datetime
 import os
-
 AWS_GROUP_NAME="eflooring"
 AWS_USERNAME = "eflooring"
-AWS_ACCESS_KEY_ID  =  os.environ.get("AWS_ACCESS_KEY_ID",'AKIAJDS5GAJFKCCMVMMA')
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY",'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')
+AWS_ACCESS_KEY_ID  =  os.environ.get("AWS_ACCESS_KEY_ID",'AKIAJ2RLVQWGGIBDA4YQ')
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY",'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')
 AWS_FILE_EXPIRE = 200
 AWS_PRELOAD_METADATA = True
 # with AWS_QUERYSTRING_AUTH true, the link will expire
