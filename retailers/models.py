@@ -1,5 +1,5 @@
 from django.db import models
-from ecommerce.utils import unique_slug_generator
+from eflooring.utils import unique_slug_generator
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from django.core.validators import RegexValidator

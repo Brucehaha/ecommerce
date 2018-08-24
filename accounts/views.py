@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import FormMixin
-from ecommerce.mixins import NextUrlMixin, RequestFormAttachMixin
+from eflooring.mixins import NextUrlMixin, RequestFormAttachMixin
 from .forms import LoginForm, RegisterForm, GuestForm, ReactivateEmailForm, UserDetailChangeForm
 from carts.models import Cart
 from .models import GuestEmail

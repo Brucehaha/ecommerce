@@ -1,5 +1,5 @@
 """
-WSGI config for ecommerce project.
+WSGI config for eflooring project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -8,13 +8,13 @@ https://docs.djangoproject.com/en/2.0/howto/deployment/wsgi/
 """
 
 import os
-# from import_env import read_env
+from .import_env import read_env
 from django.core.wsgi import get_wsgi_application
 
 '''set credential before application run on server, because applicaion do not
 run by manage.py anymore on server.
 '''
-# read_env('.env')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings")
+read_env('.env')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eflooring.settings")
 
 application = get_wsgi_application()

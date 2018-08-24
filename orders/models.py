@@ -3,7 +3,7 @@ from django.urls import reverse
 from carts.models import Cart
 from billing.models import BillingProfile
 from addresses.models import Address
-from ecommerce.utils import unique_order_id
+from eflooring.utils import unique_order_id
 from django.db.models.signals import pre_save, post_save
 from decimal import *
 

@@ -1,13 +1,13 @@
 #!/bin/bash
 
-NAME="ecommerce"                                   # Name of the application
+NAME="eflooring"                                   # Name of the application
 DJANGODIR=/var/www/html/django_env/src               # Django project directory
 SOCKFILE=/var/www/html/django_env/run/gunicorn.sock  # we will communicte using this unix socket
 USER=ubuntu                                         # the user to run as
 GROUP=ubuntu                                        # the group to run as
 NUM_WORKERS=3                                       # how many worker processes should Gunicorn spawn
-DJANGO_SETTINGS_MODULE=ecommerce.settings      # which settings file should Django use
-DJANGO_WSGI_MODULE=ecommerce.wsgi              # WSGI module name
+DJANGO_SETTINGS_MODULE=eflooring.settings      # which settings file should Django use
+DJANGO_WSGI_MODULE=eflooring.wsgi              # WSGI module name
 echo "Starting $NAME as `whoami`"
 
 # Activate the virtual environment

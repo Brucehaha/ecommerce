@@ -8,9 +8,9 @@ include/
 pip-selfcheck.json
 
 # Django related
-ecommerce/settings/local.py
-ecommerce/settings/production_aws.py
-ecommerce/settings/aws/conf.py
+eflooring/settings/local.py
+eflooring/settings/production_aws.py
+eflooring/settings/aws/conf.py
 # src/<yourproject>/settings/local.py
 # static-cdn/  # any collected static files
 

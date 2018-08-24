@@ -1,16 +1,17 @@
 import datetime
 import os
-AWS_USERNAME = "erpcommerce"
-AWS_ACCESS_KEY_ID  =  os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+AWS_GROUP_NAME="eflooring"
+AWS_USERNAME = "eflooring"
+AWS_ACCESS_KEY_ID  =  os.environ.get("AWS_ACCESS_KEY_ID",'AKIAJDS5GAJFKCCMVMMA')
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY",'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')
 AWS_FILE_EXPIRE = 200
 AWS_PRELOAD_METADATA = True
 # with AWS_QUERYSTRING_AUTH true, the link will expire
 AWS_QUERYSTRING_AUTH = True
-
-DEFAULT_FILE_STORAGE = 'ecommerce.aws.utils.MediaRootS3BotoStorage'
-STATICFILES_STORAGE = 'ecommerce.aws.utils.StaticRootS3BotoStorage'
-AWS_STORAGE_BUCKET_NAME = 'erpcommerce'
+DEFAULT_FILE_STORAGE = 'eflooring.aws.utils.MediaRootS3BotoStorage'
+STATICFILES_STORAGE = 'eflooring.aws.utils.StaticRootS3BotoStorage'
+AWS_STORAGE_BUCKET_NAME = 'eflooring'
 S3DIRECT_REGION = 'ap-southeast-2'
 S3_URL = '//%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 MEDIA_URL = '//%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME

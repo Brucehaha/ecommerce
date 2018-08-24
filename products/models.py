@@ -4,7 +4,7 @@ import os
 from datetime import date
 from django.db import models
 from django.db.models.signals import pre_save, post_save
-from ecommerce.utils import unique_slug_generator
+from eflooring.utils import unique_slug_generator
 from django.urls import reverse
 from tags.models import Tag
 

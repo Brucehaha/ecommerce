@@ -7,7 +7,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.template.loader import get_template
-from ecommerce.utils import unique_key_id
+from eflooring.utils import unique_key_id
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.urls import reverse
 from datetime import timedelta
