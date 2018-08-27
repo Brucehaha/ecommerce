@@ -38,7 +38,7 @@ class UniqueFieldFormSet(forms.BaseModelFormSet):
             try:
                 value = form.cleaned_data[field_value]
             except KeyError:
-                break
+                continue
             form.cleaned_data[field_value] = value
             func = value
             if value in values:
