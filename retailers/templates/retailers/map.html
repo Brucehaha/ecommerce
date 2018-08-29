@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}map{% endblock%}
 {% block css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
@@ -23,19 +25,59 @@ $(document).ready(function(){
         }
     })
 });
+const greeni = '{% static "retailers/img/marker-green.png" %}'
+const redi = '{% static "retailers/img/marker-red.png" %}'
+const yellowi = '{% static "retailers/img/marker-yellow.png" %}'
+const s = '{% static "retailers/img/marker-shadow.png" %}'
+
 const renderMap = (business) => {
-    var grayscaleUrl = 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
-    var streetsUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var list = [];
+    const greenIcon = L.icon({
+        iconUrl: greeni,
+        shadowUrl: s,
+        iconSize:     [38, 95], // size of the icon
+        shadowSize:   [50, 64], // size of the shadow
+        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    const redIcon = L.icon({
+        iconUrl: redi,
+        shadowUrl: s,
+        iconSize:     [38, 95], // size of the icon
+        shadowSize:   [50, 64], // size of the shadow
+        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    const yellowIcon = L.icon({
+        iconUrl: yellowi,
+        shadowUrl: s,
+        iconSize:     [38, 95], // size of the icon
+        shadowSize:   [50, 64], // size of the shadow
+        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+    const grayscaleUrl = 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
+    const streetsUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const list = [];
+    let markerIcon ='';
     for (i=0; i < business.length; i++) {
-        var location = business[i]['location'];
-        var name = business[i]['name'];
-        var count = business[i]['count'];
-        var samples = business[i]['samples'];
-        list.push(L
-            .marker(location)
-            .bindPopup('<h4>'+name+'</h4>'+''+'No.: '+count+'<br />'+'Samples: '+samples.join(' | '))
-        )
+        const location = business[i]['location'];
+        const name = business[i]['name'];
+        const count = business[i]['count'];
+        const samples = business[i]['samples'];
+        if (count >= 31){
+            markerIcon = greenIcon;
+        } else if (count<31&&count>=15){
+            markerIcon = redIcon
+        } else{
+            markerIcon = yellowIcon
+        }
+        let marker = L.marker(location, {icon:markerIcon})
+                      .bindPopup('<h4>'+name+'</h4>'+''+'No.: '+count+'<br />'+'Samples: '+samples.join(' | '))
+        list.push(marker)
 
     }
     // var tfc = L.marker([-37.746243, 145.0041753]).bindPopup('This is GD flooring');
@@ -46,13 +88,15 @@ const renderMap = (business) => {
     var grayscale = L.tileLayer(grayscaleUrl, {id: 'MapID'}),
         streets   = L.tileLayer(streetsUrl, {id: 'MapID'});
 
+
+
     var mymap = L.map('mapid', {
         center: [-37.8136, 144.9631],
         zoom: 10,
         layers: [grayscale, Melbourne],
         attributionControl: false,
     });
-    $("a").click(function(e) {
+    $(".nav-link").click(function(e) {
         $(".active").removeClass("active");
         $(this).addClass("active");
         var pos = e.target.getAttribute('data-position');
