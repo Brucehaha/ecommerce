@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.generic import ListView
 from . import forms
 from . import models
 
+
+@staff_member_required
 def RetailerMap(request):
     return render(request, "retailers/map.html", {})
 
+@staff_member_required
 def RetailerMapAjax(request):
     # data = {}
     # if request.is_ajax():
@@ -25,6 +29,11 @@ def RetailerMapAjax(request):
 class RetailerListView(ListView):
     model = models.Retailer
     template_name = "retailers/retailer_list.html"
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_staff:
+            return render(request, "400.html", {})
+        return super(RetailerListView, self).dispatch(request,*args, **kwargs)
 
 def RemoveRetailer(request):
     if request.method == 'POST':
@@ -39,7 +48,7 @@ def RemoveRetailer(request):
     return redirect("retailers:list")
 
 
-
+@staff_member_required
 def create_retailer(request):
     form_class = forms.RetailerForm
     sample_forms = forms.SampleBridgeFormSet(
@@ -67,7 +76,7 @@ def create_retailer(request):
         })
 
 
-
+@staff_member_required
 def create_retailer(request):
     form_class = forms.RetailerForm
     sample_forms = forms.SampleBridgeInlineFormSet(
@@ -98,7 +107,7 @@ def create_retailer(request):
         'formset':sample_forms
         })
 
-
+@staff_member_required
 def edit_retailer(request, retailer_pk):
     retailer = get_object_or_404(models.Retailer, pk=retailer_pk)
     form_class = forms.RetailerForm
