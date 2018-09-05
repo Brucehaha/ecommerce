@@ -14,7 +14,8 @@
         <div class="row">
           <form method='POST' action='{% url "contact" %}' class="contact-form">
             {% csrf_token %}
-            {{ form }}
+            {% include 'base/form.html' with form=form %}
+
             <button type="submit" class="btn btn-default">Submit</button>
           </form>
         </div>

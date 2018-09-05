@@ -63,8 +63,8 @@ class BillingProfile(models.Model):
 		cards.update(active=False)
 		return cards.filter(active=True).count()
 
-	def get_payment_method_url(self):\
-		return reverse('payment_method')
+	def get_payment_method_url(self):
+		return reverse('payment_card')
 
 	@property
 	def has_card(self):

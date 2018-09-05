@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'orders',
     'marketing',
     'retailers',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

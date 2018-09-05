@@ -13,7 +13,39 @@ STRIPE_PUBLIC_KEY = getattr(settings, 'STRIPE_PUBLIC_KEY', 'pk_test_G1nt8Wx2P97t
 STRIPE_PRIVATE_KEY = getattr(settings, 'STRIPE_PRIVATE_KEY', 'sk_test_KRibT0JWeBwggF5iksBZ6y3j')
 stripe.api_key=STRIPE_PRIVATE_KEY
 
-def payment_method(request):
+def payment_method_change(request):
+    try:
+        del request.session['payment_method']
+    except KeyError:
+        pass
+    next_url=None
+    next_= request.GET.get("next")
+    if is_safe_url(next_, request.get_host()):
+        next_url = next_
+    context={
+        "next_url": next_url,
+        }
+    return render(request, 'billing/change-payment-method.html', context)
+
+def payment_choose(request):
+	if request.user.is_authenticated:
+		next_ = request.GET.get('next')
+		next_post = request.POST.get('next')
+		redirect_path = next_ or next_post or None
+		print(redirect_path)
+		if request.method == "POST":
+			payment	= request.POST.get('payment', None)
+			if payment is not None:
+				if payment in ('card', 'cash', 'bsb'):
+					request.session["payment_method"] = payment
+			print(is_safe_url(redirect_path, request.get_host()))
+			if is_safe_url(redirect_path, request.get_host()):
+					return redirect(redirect_path)
+			else:
+				redirect("carts:checkout")
+		return redirect("carts:checkout")
+
+def payment_card(request):
     billing_obj, created = BillingProfile.objects.new_or_get(request)
     if not billing_obj:
         return redirect("/cart")
@@ -27,7 +59,7 @@ def payment_method(request):
         }
     return render(request, 'billing/card.html', context)
 
-def payment_method_create(request):
+def payment_card_create(request):
     if request.method == "POST" and request.is_ajax():
         token = request.POST.get('token')
         billing_obj, created = BillingProfile.objects.new_or_get(request)
@@ -42,5 +74,5 @@ def payment_method_create(request):
                 })
 
         else:
-            return HttpResponse({"message": "Please Create Create Stripe Customer"}, status=401)
+            return HttpResponse({"message": "Please Create a Stripe Customer"}, status=401)
     return HttpResponse("error", status=401)

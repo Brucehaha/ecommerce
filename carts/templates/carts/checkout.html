@@ -1,96 +1,80 @@
 {% extends "base.html" %}
+{% load staticfiles  %}
 
 {% block content %}
 	<div class="container">
-{% if not billing_profile %}
-<div class="row">
-	<div class="col-6">
-	 	Login
-	 	{% include 'accounts/snippets/login_form.html' with form=form next_url=request.build_absolute_uri %}
-	 </div>
-	 {% url "guest_register" as guest_register %}
- 	<div class="col-6">
-	 	{% include 'accounts/snippets/login_form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register %}
+    {% if not billing_profile %}
+    <div class="row">
+    	<div class="col-6">
+    	 	Login
+    	 	{% include 'accounts/snippets/login_form.html' with form=form next_url=request.build_absolute_uri %}
+    	 </div>
+    	 {% url "guest_register" as guest_register %}
+     	<div class="col-6">
+    	 	{% include 'accounts/snippets/login_form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register %}
 
- 	</div>
-</div>
-{% else %}
-	{% if not order_obj.shipping_address %}
-		<div class="row my-4">
-			<div class="col-12">
-				<h3>Shipping Address</h3>
-			</div>
-			</div>
-			<div class="row my-4">
-			<div class="col-sm-6">
-				<strong>Add Address</strong>
+     	</div>
+    </div>
+    {% else %}
 
-				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='shipping' %}
-			</div>
-			<div class="col-sm-6 mx-auto">
-				<strong>Address history</strong>
-	 			{% include 'addresses/address_reuse.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='shipping'  %}
-			</div>
-	 	</div>
-{% elif not order_obj.billing_address %}
-		<div class="row my-4">
-			<div class="col-12">
-				<h3>Billing Address</h3>
-			</div>
-			</div>
-		<div class="row my-4">
+        	{% if not order_obj.shipping_address %}
+        		<div class="row my-4">
+        			<div class="col-12">
+        				<h3>Shipping Address</h3>
+        			</div>
+        			</div>
+        			<div class="row my-4">
+        			<div class="col-sm-6">
+        				<strong>Add Address</strong>
 
-			<div class="col-sm-6">
-				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='billing' %}
-			</div>
-			<div class="col-sm-6 mx-auto">
-				<strong>Address history</strong>
-	 			{% include 'addresses/address_reuse.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='billing'  %}
-			</div>
-		</div>
+        				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='shipping' %}
+        			</div>
+        			<div class="col-sm-6 mx-auto">
+        				<strong>Address history</strong>
+        	 			{% include 'addresses/address_reuse.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='shipping'  %}
+        			</div>
+        	 	</div>
+            {% elif not order_obj.billing_address %}
+            		<div class="row my-4">
+            			<div class="col-12">
+            				<h3>Billing Address</h3>
+            			</div>
+            			</div>
+            		<div class="row my-4">
 
+            			<div class="col-sm-6">
+            				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri address_type='billing' %}
+            			</div>
+            			<div class="col-sm-6 mx-auto">
+            				<strong>Address history</strong>
+            	 			{% include 'addresses/address_reuse.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='billing'  %}
+            			</div>
+            		</div>
+         	{% else %}
+                {% if not payment_method %}
 
+                    {% include 'billing/payment-method-form.html' with next_url=request.build_absolute_uri %}
 
+                {% elif payment_method == "card" %}
+        				{% if not billing_profile.has_card %}
+            				<div class='col-10 col-md-6 mx-auto my-2'>
+            					<!-- jsrender recycle the stripe form therefore one form can be used in
+            				initialize the new cards in checkout.html , or change a card in card.html by payment-method view  -->
+            					<!-- pass  next_url to div attr, then js get the attr value N assign
+            					it form next_url, finally next url is passed to success method of ajax, to load to finall address-->
+            				<div class="stripe-payment-form" public_token="{{ public_token }}" next_url="{{ request.build_absolute_uri }}"></div>
+            				</div>
 
- 	{% else %}
-				{% if not billing_profile.has_card %}
-				<div class='col-10 col-md-6 mx-auto my-2'>
-					<!-- jsrender recycle the stripe form therefore one form can be used in
-				initialize the new cards in checkout.html , or change a card in card.html by payment-method view  -->
-					<!-- pass  next_url to div attr, then js get the attr value N assign
-					it form next_url, finally next url is passed to success method of ajax, to load to finall address-->
-				<div class="stripe-payment-form" public_token="{{ public_token }}" next_url="{{ request.build_absolute_uri }}"></div>
-				</div>
+        				{% else %}
+                            {% include 'carts/final.html' with order_obj=order_obj billing_profile=billing_profile payment_method=payment_method %}
+        				{% endif %}
+                {% else %}
+                    {% include 'carts/final.html' with order_obj=order_obj billing_profile=billing_profile payment_method=payment_method %}
 
-				{% else %}
-					<div class="row">
-						<div class="col-12">
-							<h1>Checkout</h1>
-						</div>
-					<div class="col-12">
-						<p>Total: {{ order_obj.cart.total }}</p>
-						<p>Shipping Address: {{ order_obj.shipping_address.get_address }}</p>
-						<p>Shipping Cost: {{ order_obj.ship_total }}</p>
-						<p>Subtotal: {{ order_obj.total }}</p>
-						<!-- reuse the payment-method view, and payment method view will get the next url and resend
-					it by get method back to div next_url then pass it to form next_url then, js get it and pass it
-				to windows.location in AJAX-->
-						<p>Payment Method: {{ billing_profile.default_cards }}(<a href="{{ billing_profile.get_payment_method_url }}?next={{ request.build_absolute_uri }}">Change</a>)</p>
-
-						<form method="POST", action="">
-							{% csrf_token %}
-						<button type="submit" class="btn btn-default">Checkout</button>
-						</form>
-					</div>
-				</div>
-				{% endif %}
-	{% endif %}
+                {% endif %}
+        	{% endif %}
 
 {% endif %}
-</div>
+    </div>
 
-{% endblock %}
-{% block js %}
-<script src='{% static "js/stripe.js" %}'></script>
-{% include 'base/stripe_js.html' %}
 {% endblock %}

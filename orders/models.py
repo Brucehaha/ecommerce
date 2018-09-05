@@ -21,11 +21,12 @@ ORDER_STATUS_CHOICES=(
     ('paid', 'Paid'),
     ('shipped', 'Shipped'),
     ('refund', 'refund'),
+    ('pending', 'pending'),
     )
 PAYMENT_CHOICE = (
     ('card', 'Card'),
     ('cash', 'Cash'),
-    ('BSB', 'BSB')
+    ('bsb', 'BSB')
 )
 class OrderManagerQuerySet(models.query.QuerySet):
     def not_created(self):
@@ -66,7 +67,8 @@ class Order(models.Model):
     billing_address         = models.ForeignKey(Address, related_name='billing', null=True, blank=True, on_delete=models.DO_NOTHING)
     order_id                = models.CharField(max_length=120, blank=True)
     cart                    = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    status                  = models.CharField(max_length=120, default='created', choices=ORDER_STATUS_CHOICES)
+    status                  = models.CharField(max_length=50, default='created', choices=ORDER_STATUS_CHOICES)
+    payment_method          = models.CharField(max_length=50, default='cash', choices=PAYMENT_CHOICE)
     ship_total              = models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
     total                   = models.DecimalField(default=5.99, max_digits=200, decimal_places=2)
     active                  = models.BooleanField(default=True)
@@ -98,10 +100,14 @@ class Order(models.Model):
         if shipping_address and billing_profile and billing_profile and total > 0:
             return True
         return False
-    def mark_paid(self):
+    def mark_paid(self, status="paid"):
         if self.check_done:
-            self.status = "paid"
+            self.status = status
             self.save()
+    def mark_payment_method(self, payment_method="bsb"):
+        self.payment_method = payment_method
+        self.save()
+
 
 def pre_save_order_id(sender, instance, *args, **kwargs):
     if not instance.order_id:

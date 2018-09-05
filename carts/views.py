@@ -105,6 +105,7 @@ def check_out(request):
     guest_form = GuestForm(request=request)
     shipping_address_id = request.session.get('shipping_address_id')
     billing_address_id = request.session.get('billing_address_id')
+    payment_method = request.session.get('payment_method')
     address_qs = None
 
     if new_cart or cart_obj.products.count() == 0:
@@ -117,6 +118,7 @@ def check_out(request):
     if billing_profile is not None:
         if request.user.is_authenticated:
             address_qs = Address.objects.filter(billing_profile=billing_profile)
+
         order_obj, oder_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
 
         if shipping_address_id is not None:
@@ -125,7 +127,6 @@ def check_out(request):
             del request.session['shipping_address_id']
 
         if billing_address_id is not None:
-            print(billing_address_id)
             billing_address_obj = Address.objects.get(id=billing_address_id)
             order_obj.billing_address = billing_address_obj
             del request.session['billing_address_id']
@@ -138,14 +139,26 @@ def check_out(request):
         '''
     if request.method == "POST":
         is_done = order_obj.check_done()
+        print(payment_method)
         if is_done:
-            billing_profile.charge(order_obj)
-            order_obj.mark_paid()
+            if payment_method == 'card':
+                billing_profile.charge(order_obj)
+                order_obj.mark_paid()
+                order_obj.mark_payment_method("card")
+            else:
+                order_obj.mark_paid("pending")
+
+            order_obj.mark_payment_method(payment_method)
             cart_obj.cart_checkout()
             ##delete session card id after check_ou
             del request.session['cart_id']
             ##delete cart no. with remove cart items.
             del request.session['cart_items']
+                ##delete cart no. with remove cart items.
+            try:
+                del request.session['payment_method']
+            except KeyError:
+                pass
             if not billing_profile.user:
                 billing_profile.deactivate_card()
                 try:
@@ -164,6 +177,7 @@ def check_out(request):
         "address_form" : address_form,
         "address_qs" : address_qs,
         "public_token":STRIPE_PUBLIC_KEY,
+        "payment_method":payment_method
 
     }
     return render(request, "carts/checkout.html", context)

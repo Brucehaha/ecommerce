@@ -12,7 +12,7 @@ from carts.views import cart_refresh
 from addresses.views import addess_create, address_choose
 from accounts.views import LoginView, RegisterView, GuestRegisterView
 from products.views import ProductListView,ProductDetailView
-from billing.views import payment_method, payment_method_create
+from billing.views import payment_card, payment_card_create, payment_choose, payment_method_change
 from marketing.views import subscribe, MarketingPreferenceView, MailchimpWebhooView
 from orders.views import OrderListView
 from analytics.views import SalesView, SalesAjaxView
@@ -48,9 +48,12 @@ urlpatterns = [
     re_path(r'^addresses/$', AddressListView.as_view(), name='addresses'),
     re_path(r'^addresses/create/$', AddressCreateView.as_view(), name='address-create'),
     re_path(r'^addresses/(?P<pk>\d+)/$', AddressUpdateView.as_view(), name='address-update'),
+    ##billing
+    path('payment-card/',payment_card, name='payment_card'),
+    path('payment-card-create/',payment_card_create, name='payment_card_create'),
+    re_path(r'^choose-payment-method/$', payment_choose, name='payment_choose'),
+    re_path(r'^change-payment-method/$', payment_method_change, name='payment_method_change'),
 
-    path('payment-method/',payment_method, name='payment_method'),
-    path('payment-method/create/',payment_method_create, name='payment_method_create'),
 
     ##marketing
     path('subscribe/',subscribe, name='subscribe'),

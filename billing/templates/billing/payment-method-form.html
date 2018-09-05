@@ -1,0 +1,24 @@
+<form method='POST' action='{% url "payment_choose" %}'>
+	<div class="form-group">
+		{% csrf_token %}
+		{% if next_url %}
+		<input type='hidden' name='next' value='{{ next_url }}' />
+		{% endif %}
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="payment" id="payment_cash" value="cash" checked>
+          <label class="form-check-label" for="payment_cash">Cash while pickup</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="payment" id="payment_bsb" value="bsb" >
+          <label class="form-check-label" for="payment_bsb">Direct Bank Transfer</label>
+            <p>– This option is for direct bank transfer only.</p>
+            <p>– If you want to pay by your credit card or debit card, you can select the PayPal option. ( Or you can call us on ( 03 9731 6391 ) to make a credit / debit card payment. )</p>
+            <p>– Please note: your order won’t be shipped until the funds have cleared in our account.</p>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="payment" id="payment_card" value="card" >
+          <label class="form-check-label" for="payment_card">Pay by bank card</label>
+        </div>
+	</div>
+	<button type="submit" class="btn btn-default">Submit</button>
+</form>

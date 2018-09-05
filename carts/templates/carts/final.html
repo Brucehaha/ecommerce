@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-12">
+        <h1>Checkout</h1>
+    </div>
+<div class="col-12">
+    <p>Total: {{ order_obj.cart.total }}</p>
+    <p>Shipping Address: {{ order_obj.shipping_address.get_address }}</p>
+    <p>Shipping Cost: {{ order_obj.ship_total }}</p>
+    <p>Subtotal: {{ order_obj.total }}</p>
+    <!-- reuse the payment-method view, and payment method view will get the next url and resend
+it by get method back to div next_url then pass it to form next_url then, js get it and pass it
+to windows.location in AJAX-->
+    <p>Payment Method:
+        {% if payment_method == "card" %}
+            {{ billing_profile.default_cards }}
+                (<a href="{{ billing_profile.get_payment_method_url }}?next={{ request.build_absolute_uri }}">
+                    Change
+                </a>)
+        {% else %}
+            {{ payment_method }}
+                (<a href="{% url 'payment_method_change' %}?next={{ request.build_absolute_uri }}">
+                    Change
+                </a>)
+        {% endif %}
+    </p>
+
+    <form method="POST", action="">
+        {% csrf_token %}
+    <button type="submit" class="btn btn-default">Checkout</button>
+    </form>
+</div>
+</div>

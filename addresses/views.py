@@ -64,7 +64,6 @@ def addess_create(request):
 	return redirect("carts:checkout")
 
 
-
 def address_choose(request):
 	if request.user.is_authenticated:
 		next_ = request.GET.get('next')
@@ -72,7 +71,6 @@ def address_choose(request):
 		redirect_path = next_ or next_post or None
 
 		if request.method == "POST":
-
 			address_id		= request.POST.get('address', None)
 			address_type 	= request.POST.get('address_type', 'shipping')
 			billing_profile, new_billing_profile = BillingProfile.objects.new_or_get(request)
@@ -84,7 +82,6 @@ def address_choose(request):
 
 			if is_safe_url(redirect_path, request.get_host()):
 					return redirect(redirect_path)
-					print(redirect_path)
 			else:
 				redirect("carts:checkout")
 		return redirect("carts:checkout")
