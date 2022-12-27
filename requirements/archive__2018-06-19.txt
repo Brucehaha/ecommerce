@@ -7,7 +7,7 @@ Pillow==5.0.0
 pip==9.0.1
 pytz==2018.3
 requests==2.18.4
-setuptools==38.5.1
+setuptools==65.5.1
 stripe==1.82.1
 urllib3==1.22
 wheel==0.30.0
